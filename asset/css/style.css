@@ -356,7 +356,7 @@ div:hover .card-light {
   left: 50%;
   width: 150%;
   height: 150%;
-  background: radial-gradient(circle, rgba(93, 135, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+  /*background: radial-gradient(circle, rgba(93, 135, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);*/
   transform: translate(-50%, -50%) scale(1);
   filter: blur(40px);
   animation: orbMove 8s ease-in-out infinite alternate;
