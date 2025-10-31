@@ -1,48 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Calmiqs – AI-powered tools and insights for stress relief, productivity, and eco-conscious living." />
-  <title>Calmiqs | Mind Wellness & Eco Living</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calmiqs – Wellness & Eco Balance</title>
 
-  <!-- Favicon -->
-  <link rel="icon" href="/assets/images/favicon.png" type="image/png" />
+    <!-- ✅ TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#4FA49A',
+              accent: '#FFD580',
+              tech: '#5A67D8',
+            },
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="/assets/css/style.css" />
+  <body class="font-sans bg-[#F9FAFB] text-gray-800">
+    <!-- 🌿 Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
+        <h1 class="text-2xl font-bold text-primary">
+          <a href="index.html">Calmiqs</a>
+        </h1>
+        <nav>
+          <ul class="flex gap-6 text-gray-700">
+            <li><a href="index.html" class="hover:text-primary">Home</a></li>
+            <li><a href="tools.html" class="hover:text-primary">Tools</a></li>
+            <li><a href="blog.html" class="hover:text-primary">Blog</a></li>
+            <li><a href="about.html" class="hover:text-primary">About</a></li>
+            <li><a href="contact.html" class="hover:text-primary">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-  <!-- Google Fonts (Optional) -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-  <!-- Temporary noindex during testing -->
-  <meta name="robots" content="noindex, nofollow" />
-</head>
-
-<body>
-  <header class="site-header">
-    <h1>Calmiqs</h1>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/blog.html">Blog</a>
-      <a href="/tools.html">Tools</a>
-      <a href="/about.html">About</a>
-    </nav>
-  </header>
-
-  <main class="hero">
-    <section class="intro">
-      <h2>Welcome to Calmiqs 🌿</h2>
-      <p>Your AI-powered partner for mindfulness, focus, and sustainable living. Discover interactive tools, stress relief games, and eco-friendly insights.</p>
-      <a class="cta-btn" href="/tools.html">Try Our Tools</a>
+    <!-- 🌤️ Hero Section -->
+    <section class="text-center py-24 px-6 bg-gradient-to-br from-primary via-accent to-tech text-white">
+      <h2 class="text-4xl sm:text-5xl font-bold mb-6">
+        Calm Your Mind & Grow Your Balance
+      </h2>
+      <p class="max-w-2xl mx-auto mb-8 text-lg">
+        Explore AI-powered wellness tools and eco-friendly insights designed to help you breathe better, think clearer, and live greener.
+      </p>
+      <a href="tools.html" class="bg-white text-primary px-6 py-3 rounded-xl font-medium hover:bg-accent hover:text-white transition">
+        🌿 Try CalmBreath Now
+      </a>
     </section>
-  </main>
 
-  <footer class="footer">
-    <p>© 2025 Calmiqs. All rights reserved.</p>
-  </footer>
+    <!-- 🌱 Features Section -->
+    <section class="max-w-6xl mx-auto py-20 px-6 grid md:grid-cols-3 gap-10 text-center">
+      <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold text-primary mb-3">Mind Tools</h3>
+        <p>Interactive AI games and breathing apps for daily stress relief and focus training.</p>
+      </div>
+      <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold text-primary mb-3">Green Living</h3>
+        <p>Practical eco tips and sustainable habits for a healthier planet and you.</p>
+      </div>
+      <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg transition">
+        <h3 class="text-xl font-semibold text-primary mb-3">AI Insights</h3>
+        <p>Smart recommendations and personalized guides for better mental wellness.</p>
+      </div>
+    </section>
 
-  <!-- JS -->
-  <script src="/assets/js/main.js" defer></script>
-</body>
+    <!-- 🌿 Footer -->
+    <footer class="bg-white border-t border-gray-200 text-center py-6 text-gray-500">
+      © 2025 Calmiqs · Breathe Better. Live Greener.
+    </footer>
+  </body>
 </html>
