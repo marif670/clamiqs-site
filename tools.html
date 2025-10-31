@@ -3,78 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mind & Wellness Tools | Calmiqs</title>
+  <title>CalmBreath | Calmiqs</title>
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
-  <!-- ===== Header ===== -->
   <header>
-    <nav class="navbar">
-      <div class="logo"><a href="index.html">Calmiqs</a></div>
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="tools.html" class="active">Tools</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="sustainability.html">Sustainability</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
+    <div class="container">
+      <h1><a href="index.html">Calmiqs</a></h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="tools.html" class="active">Tools</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <!-- ===== Tools Section ===== -->
-  <main class="tools-section">
-    <h1>Mind & Wellness Tools</h1>
-    <p>
-      Explore free, AI-powered and science-based tools designed to help you relax,
-      focus, and live sustainably. All tools are built for simplicity and effectiveness.
-    </p>
+  <main class="tools-page">
+    <section class="tool-container">
+      <h1>🫁 CalmBreath – Guided Breathing Exercise</h1>
+      <p class="tool-desc">
+        Follow the breathing animation below to calm your mind and reduce stress.
+      </p>
 
-    <div class="tools-grid">
-      <!-- Tool 1 -->
-      <div class="tool-card">
-        <h2>🧘 CalmBreath</h2>
-        <p>A simple breathing rhythm guide to reduce anxiety and improve focus.</p>
-        <button onclick="openTool('calmbreath')">Open Tool</button>
-      </div>
+      <div class="breathing-circle" id="breathingCircle"></div>
+      <div class="instruction" id="instructionText">Ready?</div>
 
-      <!-- Tool 2 -->
-      <div class="tool-card">
-        <h2>🧠 MemorySpark</h2>
-        <p>Challenge your brain with relaxing memory and focus exercises.</p>
-        <button onclick="openTool('memoryspark')">Open Tool</button>
-      </div>
-
-      <!-- Tool 3 -->
-      <div class="tool-card">
-        <h2>🌿 EcoImpact</h2>
-        <p>Estimate your carbon footprint and get personalized green tips.</p>
-        <button onclick="openTool('ecoimpact')">Open Tool</button>
-      </div>
-
-      <!-- Tool 4 -->
-      <div class="tool-card">
-        <h2>🪷 MoodAI</h2>
-        <p>Use AI to analyze your mood from short text reflections.</p>
-        <button onclick="openTool('moodai')">Open Tool</button>
-      </div>
-    </div>
-
-    <!-- Tool Modal (Placeholder) -->
-    <div id="toolModal" class="modal">
-      <div class="modal-content">
-        <span class="close" onclick="closeTool()">&times;</span>
-        <div id="toolContent">
-          <h3>Loading tool...</h3>
-        </div>
-      </div>
-    </div>
+      <button id="startButton" class="start-btn">Start Breathing</button>
+    </section>
   </main>
 
-  <!-- ===== Footer ===== -->
   <footer>
-    <div class="footer-content">
-      <p>© 2025 Calmiqs. All rights reserved.</p>
-    </div>
+    <p>&copy; 2025 Calmiqs. All rights reserved.</p>
   </footer>
 
   <script src="assets/js/main.js"></script>

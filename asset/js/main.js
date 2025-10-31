@@ -1,47 +1,49 @@
-// small helpers
-document.getElementById && (document.getElementById('yr') && (document.getElementById('yr').textContent = new Date().getFullYear()));
-document.getElementById && (document.getElementById('yr2') && (document.getElementById('yr2').textContent = new Date().getFullYear()));
-// Tools modal functionality
-function openTool(toolName) {
-  const modal = document.getElementById("toolModal");
-  const content = document.getElementById("toolContent");
+// --- Calmiqs Main Script ---
+// Handles breathing tool and any global site behavior
 
-  modal.style.display = "flex";
+document.addEventListener("DOMContentLoaded", () => {
+  const circle = document.getElementById("breathingCircle");
+  const instruction = document.getElementById("instructionText");
+  const startButton = document.getElementById("startButton");
 
-  // Placeholder demo content
-  switch(toolName) {
-    // === CalmBreath Animation ===
-function startBreathingAnimation() {
-  const circle = document.querySelector(".circle");
-  const text = document.getElementById("breathText");
+  // If not on tools page, stop here
+  if (!circle || !instruction || !startButton) return;
 
-  let phase = 0; // 0 = Inhale, 1 = Hold, 2 = Exhale
+  let cycle; // interval tracker
+  startButton.addEventListener("click", () => {
+    if (cycle) return; // prevent multiple clicks
+    startButton.disabled = true;
+    instruction.textContent = "Get Ready...";
+    setTimeout(startSession, 2000);
+  });
 
-  function cycle() {
-    if (!circle || !text) return;
+  function startSession() {
+    let phase = 0;
 
-    if (phase === 0) {
-      text.innerText = "Breathe In";
-      circle.style.transform = "scale(1.3)";
-      setTimeout(() => { phase = 1; cycle(); }, 4000);
-    } 
-    else if (phase === 1) {
-      text.innerText = "Hold";
-      setTimeout(() => { phase = 2; cycle(); }, 3000);
-    } 
-    else {
-      text.innerText = "Breathe Out";
-      circle.style.transform = "scale(1)";
-      setTimeout(() => { phase = 0; cycle(); }, 5000);
+    function breatheCycle() {
+      phase = (phase + 1) % 4;
+
+      switch (phase) {
+        case 0:
+          instruction.textContent = "Breathe In...";
+          circle.style.transform = "scale(1.5)";
+          circle.style.boxShadow = "0 0 60px rgba(79, 164, 154, 0.8)";
+          break;
+        case 1:
+          instruction.textContent = "Hold...";
+          break;
+        case 2:
+          instruction.textContent = "Breathe Out...";
+          circle.style.transform = "scale(1)";
+          circle.style.boxShadow = "0 0 25px rgba(79, 164, 154, 0.5)";
+          break;
+        case 3:
+          instruction.textContent = "Hold...";
+          break;
+      }
     }
+
+    breatheCycle();
+    cycle = setInterval(breatheCycle, 4000);
   }
-
-  cycle();
-}
-
-  }
-}
-
-function closeTool() {
-  document.getElementById("toolModal").style.display = "none";
-}
+});

@@ -169,29 +169,56 @@ footer {
   font-size: 22px;
   cursor: pointer;
 }
-/* === CalmBreath Tool === */
-.breathing-container {
+/* --- CalmBreath Tool Section --- */
+.tools-page {
+  min-height: 80vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 2rem;
 }
 
-.circle {
+.tool-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tool-desc {
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.breathing-circle {
   width: 150px;
   height: 150px;
-  background-color: #a7ffeb;
+  margin: 30px auto;
+  background: radial-gradient(circle, #80cbc4 0%, #4fa49a 100%);
   border-radius: 50%;
-  transition: transform 4s ease-in-out;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  box-shadow: 0 0 25px rgba(79, 164, 154, 0.5);
+  transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
 }
 
-#breathText {
-  font-size: 1.5rem;
-  color: #00695c;
+.start-btn {
+  background-color: #4fa49a;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
   margin-top: 20px;
-  font-weight: 600;
-  transition: opacity 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
+.start-btn:hover {
+  background-color: #3e837c;
+  transform: scale(1.05);
+}
+
+.instruction {
+  font-size: 1.4rem;
+  margin-top: 20px;
+  color: #333;
+}
