@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Calmiqs | Get in Touch</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- ===== Header ===== -->
+  <header>
+    <nav class="navbar">
+      <div class="logo"><a href="index.html">Calmiqs</a></div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="sustainability.html">Sustainability</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ===== Contact Section ===== -->
+  <main class="contact-section">
+    <section class="contact-intro">
+      <h1>Contact Us</h1>
+      <p>
+        We'd love to hear from you! Whether you have feedback, collaboration ideas, or general inquiries,
+        reach out to us through the form below or email us directly.
+      </p>
+    </section>
+
+    <section class="contact-form">
+      <form id="contactForm" method="POST" data-netlify="true" name="contact">
+        <input type="hidden" name="form-name" value="contact">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+        <label for="email">Your Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="5" placeholder="Write your message..." required></textarea>
+
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+
+    <section class="contact-alt">
+      <h3>Other ways to connect</h3>
+      <p>Email: <a href="mailto:support@calmiqs.com">support@calmiqs.com</a></p>
+      <p>Follow us on: 
+        <a href="#">Twitter</a> | 
+        <a href="#">LinkedIn</a> | 
+        <a href="#">Instagram</a>
+      </p>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="footer-content">
+      <p>© 2025 Calmiqs. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

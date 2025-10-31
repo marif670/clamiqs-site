@@ -7,3 +7,191 @@ a{color:var(--accent);text-decoration:none}
 .post-list{list-style:none;padding:0}
 .btn{display:inline-block;padding:10px 14px;border-radius:6px;background:var(--accent);color:#fff;text-decoration:none;margin-right:8px}
 footer{padding:24px;text-align:center;color:#666;border-top:1px solid #eee}
+
+/* About Page Styling */
+.about-section {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 0 20px;
+  line-height: 1.8;
+  color: #333;
+}
+
+.about-section h1, .about-section h2 {
+  color: #00897b;
+  margin-bottom: 10px;
+}
+
+.about-section p, .about-section li {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.values ul {
+  list-style: none;
+  padding: 0;
+}
+
+.values li {
+  background: #f7f7f7;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+footer {
+  background: #f0f0f0;
+  text-align: center;
+  padding: 20px;
+  margin-top: 50px;
+}
+
+/* Contact Page */
+.contact-section {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.contact-intro h1 {
+  color: #00897b;
+}
+
+.contact-form {
+  background: #f9f9f9;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-top: 30px;
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.contact-form button {
+  background: #00897b;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.contact-form button:hover {
+  background: #00695c;
+}
+
+.contact-alt {
+  margin-top: 40px;
+  text-align: center;
+}
+
+/* Tools Page */
+.tools-section {
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.tool-card {
+  background: #f9f9f9;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-5px);
+}
+
+.tool-card h2 {
+  color: #00897b;
+  margin-bottom: 10px;
+}
+
+.tool-card button {
+  background: #00897b;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tool-card button:hover {
+  background: #00695c;
+}
+
+/* Modal Styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  text-align: left;
+}
+
+.close {
+  float: right;
+  font-size: 22px;
+  cursor: pointer;
+}
+/* === CalmBreath Tool === */
+.breathing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.circle {
+  width: 150px;
+  height: 150px;
+  background-color: #a7ffeb;
+  border-radius: 50%;
+  transition: transform 4s ease-in-out;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+#breathText {
+  font-size: 1.5rem;
+  color: #00695c;
+  margin-top: 20px;
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+}
+
