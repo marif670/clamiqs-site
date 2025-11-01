@@ -462,3 +462,6 @@ div:hover .card-light {
   z-index: 0;
   filter: blur(20px);
 }
+.card {
+  background: linear-gradient(135deg, #34d399, #3b82f6) !important;
+}
