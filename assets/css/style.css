@@ -555,15 +555,41 @@ section.features .card p {
 
 /* Orb color variations */
 .orb-blue {
-  background: radial-gradient(circle at center, #3b82f6, #2563eb);
+  background: radial-gradient(circle, #60a5fa, #2563eb);
 }
 
 .orb-green {
-  background: radial-gradient(circle at center, #10b981, #059669);
+  background: radial-gradient(circle, #34d399, #059669);
 }
 
 .orb-purple {
-  background: radial-gradient(circle at center, #8b5cf6, #6d28d9);
+  background: radial-gradient(circle, #c084fc, #7c3aed);
+}
+/* ✨ Orb breathing animation */
+@keyframes orbPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+.card-orb {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  filter: blur(20px);
+  opacity: 0.9;
+  z-index: 0;
+  animation: orbPulse 4s ease-in-out infinite;
 }
 
 /* Keep text above orb */
