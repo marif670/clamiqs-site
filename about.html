@@ -14,48 +14,30 @@ Place this file at the root of your Cloudflare Pages repo (same folder as index.
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>About — Calmiqs</title>
-    <!-- Link to the same stylesheet your site uses (adjust path if different) -->
-    <link rel="stylesheet" href="/assets/css/styles.css" />
-    <!-- Optional: small page-specific styles to complement your existing CSS/Tailwind -->
-    <style>
-      /* 3D glow card helper (keeps consistent with main design language) */
-      .glow-3d {
-        transform-style: preserve-3d;
-        perspective: 1000px;
-      }
-      .glow-card {
-        transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 0.45s;
-        transform: translateZ(0);
-        box-shadow: 0 10px 30px rgba(8, 8, 12, 0.15);
-        border-radius: 1rem;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-      }
-      .glow-card:hover {
-        transform: translateY(-8px) rotateX(4deg) rotateY(-4deg) scale(1.01);
-        box-shadow: 0 20px 60px rgba(7, 120, 255, 0.08), 0 6px 20px rgba(0, 0, 0, 0.25);
-      }
-      .glow-accent {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        border-radius: inherit;
-        background: radial-gradient(
-            600px 120px at 10% 10%,
-            rgba(45, 120, 255, 0.12),
-            transparent 8%
-          ),
-          radial-gradient(400px 80px at 90% 90%, rgba(120, 40, 255, 0.08), transparent 10%);
-        mix-blend-mode: screen;
-      }
-      .hero-illustration {
-        width: 100%;
-        max-width: 520px;
-        height: auto;
-        transform: translateZ(40px);
-      }
-    </style>
+
+    <!-- Tailwind CDN (dev only) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind custom config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4FA49A",
+              accent: "#FFD580",
+              tech: "#5A67D8",
+            },
+            fontFamily: {
+              sans: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- IMPORTANT: use absolute root path to avoid duplicated relative paths -->
+    <link rel="stylesheet" href="/assets/css/style.css?v=12" />
   </head>
   <body class="bg-[#0b1020] text-slate-100 antialiased leading-relaxed">
     <!-- HEADER: keep the same structure and class names as index.html so site-wide CSS works -->
