@@ -482,3 +482,21 @@ section .card:nth-child(3) {
   position: relative;
   z-index: 2;
 }
+/* 🌈 Force card gradient backgrounds */
+section.features .card:nth-child(1) {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa) !important;
+}
+section.features .card:nth-child(2) {
+  background: linear-gradient(135deg, #10b981, #34d399) !important;
+}
+section.features .card:nth-child(3) {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa) !important;
+}
+
+/* Text above gradient */
+section.features .card h3,
+section.features .card p {
+  color: #fff !important;
+  position: relative;
+  z-index: 5;
+}
