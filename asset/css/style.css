@@ -462,6 +462,23 @@ div:hover .card-light {
   z-index: 0;
   filter: blur(20px);
 }
-.card {
-  background: linear-gradient(135deg, #34d399, #3b82f6) !important;
+/* 🌈 Feature Cards Gradient Backgrounds */
+.card:nth-child(1) {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa) !important; /* Blue */
+}
+
+.card:nth-child(2) {
+  background: linear-gradient(135deg, #10b981, #34d399) !important; /* Green */
+}
+
+.card:nth-child(3) {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa) !important; /* Purple */
+}
+
+/* Make text more readable */
+.card h3,
+.card p {
+  color: white !important;
+  position: relative;
+  z-index: 2;
 }
