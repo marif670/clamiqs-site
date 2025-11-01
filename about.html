@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About — Calmiqs</title>
 
-    <!-- Tailwind CDN (same as index.html) -->
+    <!-- Tailwind (same as index) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Tailwind custom config -->
+    <!-- Tailwind config -->
     <script>
       tailwind.config = {
         theme: {
@@ -21,216 +21,157 @@
             fontFamily: {
               sans: ["Poppins", "sans-serif"],
             },
+            animation: {
+              gradient: "gradientBG 8s ease infinite",
+            },
+            keyframes: {
+              gradientBG: {
+                "0%, 100%": { backgroundPosition: "0% 50%" },
+                "50%": { backgroundPosition: "100% 50%" },
+              },
+            },
           },
         },
       };
     </script>
 
-    <!-- Custom global styles -->
+    <!-- Custom styles -->
     <link rel="stylesheet" href="/assets/css/style.css?v=12" />
 
+    <!-- Font -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
   </head>
 
-  <body
-    class="bg-[#0b1020] text-slate-100 font-sans antialiased leading-relaxed selection:bg-primary/20 selection:text-primary"
-  >
-    <!-- HEADER -->
-    <header
-      class="site-header fixed top-0 left-0 right-0 z-40 bg-transparent py-6 px-6 md:px-12 flex justify-center"
-    >
-      <div class="max-w-6xl w-full flex items-center justify-between">
-        <a href="/" class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-tech shadow-lg"></div>
-          <span class="font-semibold text-lg">Calmiqs</span>
-        </a>
-
-        <nav class="hidden md:flex gap-8 text-sm">
-          <a href="/" class="nav-link hover:text-primary transition">Home</a>
-          <a href="/about.html" class="nav-link text-primary font-medium transition">About</a>
-          <a href="/tools.html" class="nav-link hover:text-primary transition">Tools</a>
-          <a href="/contact.html" class="nav-link hover:text-primary transition">Contact</a>
+  <body class="font-sans bg-[#F9FAFB] text-gray-800">
+    <!-- 🌿 Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
+        <h1 class="text-2xl font-bold text-primary">
+          <a href="index.html">Calmiqs</a>
+        </h1>
+        <nav>
+          <ul class="flex gap-6 text-gray-700">
+            <li><a href="index.html" class="hover:text-primary">Home</a></li>
+            <li><a href="tools.html" class="hover:text-primary">Tools</a></li>
+            <li><a href="blog.html" class="hover:text-primary">Blog</a></li>
+            <li>
+              <a href="about.html" class="text-primary font-semibold">About</a>
+            </li>
+            <li><a href="contact.html" class="hover:text-primary">Contact</a></li>
+          </ul>
         </nav>
-
-        <!-- Mobile Nav -->
-        <button id="mobileNavBtn" class="md:hidden p-2 rounded-md">
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M4 6h16M4 12h16M4 18h16"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </button>
-      </div>
-
-      <div
-        id="mobileNav"
-        class="hidden md:hidden absolute top-full w-full bg-[#0b1020]/95 backdrop-blur-lg px-6 pb-6"
-      >
-        <a href="/" class="block py-2">Home</a>
-        <a href="/about.html" class="block py-2 text-primary font-semibold">About</a>
-        <a href="/tools.html" class="block py-2">Tools</a>
-        <a href="/contact.html" class="block py-2">Contact</a>
       </div>
     </header>
 
-    <!-- MAIN -->
-    <main class="pt-28">
-      <!-- HERO -->
-      <section class="relative py-24 overflow-hidden">
-        <div
-          class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-tech/10 blur-3xl"
-        ></div>
+    <!-- 🌤️ Hero Section -->
+    <section class="relative text-center py-24 px-6 text-white overflow-hidden">
+      <!-- Moving gradient background -->
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-primary via-accent to-tech animate-gradient bg-[length:400%_400%]"
+      ></div>
 
-        <div
-          class="relative max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+      <!-- Text content -->
+      <div class="relative z-10">
+        <h2 class="text-4xl sm:text-5xl font-bold mb-6 drop-shadow-lg">
+          Our Purpose: Calm, Care & Conscious Tech
+        </h2>
+        <p class="max-w-2xl mx-auto mb-8 text-lg">
+          At Calmiqs, we believe wellness and sustainability go hand-in-hand. Our AI-powered tools
+          are designed to help you feel calmer, think clearer, and live more harmoniously with the
+          planet.
+        </p>
+        <a
+          href="tools.html"
+          class="bg-white text-primary px-6 py-3 rounded-xl font-medium hover:bg-accent hover:text-white transition shadow-md hover:shadow-lg"
         >
-          <div>
-            <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">About Calmiqs</h1>
-            <p class="mt-6 text-lg text-slate-300 max-w-xl">
-              Calmiqs is an eco-focused, AI-powered wellness brand creating mindful digital
-              experiences that promote calm, focus, and sustainability. We design tools that care
-              for both you and the planet.
-            </p>
-            <div class="mt-8 flex gap-4">
-              <a
-                href="/tools.html"
-                class="px-5 py-3 rounded-xl bg-primary text-black font-medium shadow-md hover:bg-primary/80 transition"
-              >
-                Explore Tools
-              </a>
-              <a
-                href="/contact.html"
-                class="px-5 py-3 rounded-xl border border-primary text-primary hover:bg-primary/10 transition"
-              >
-                Get in Touch
-              </a>
-            </div>
-          </div>
+          🌿 Explore Our Tools
+        </a>
+      </div>
+    </section>
 
-          <div class="flex justify-center lg:justify-end">
-            <div
-              class="relative p-8 rounded-2xl backdrop-blur-md bg-white/5 border border-white/10 shadow-xl transform transition hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(79,164,154,0.3)]"
-            >
-              <div class="text-center">
-                <h3 class="text-2xl font-semibold mb-3 text-primary">Calm by Design</h3>
-                <p class="text-slate-300 text-sm">
-                  Every interaction on Calmiqs is designed to slow you down, reduce overwhelm, and
-                  create a sense of natural ease through balanced visual and interactive cues.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <!-- 💎 Vision / Mission / Story -->
+    <section class="max-w-6xl mx-auto py-20 px-6 text-center">
+      <h3 class="text-3xl font-bold text-gray-800 mb-8">Our Vision, Mission & Story</h3>
+      <p class="max-w-2xl mx-auto text-gray-600 mb-12">
+        We’re building Calmiqs as a mindful space where technology uplifts human wellbeing while
+        caring for the environment.
+      </p>
 
-      <!-- VISION / MISSION / STORY -->
-      <section class="py-20 bg-transparent">
-        <div class="max-w-6xl mx-auto px-6 md:px-12 text-center">
-          <h2 class="text-3xl font-bold mb-4">Our Vision, Mission & Story</h2>
-          <p class="text-slate-400 max-w-2xl mx-auto mb-10">
-            Calmiqs stands for mindful technology — light, purposeful, and sustainable.
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Vision -->
+        <div
+          class="p-8 rounded-2xl bg-white shadow-md hover:shadow-xl transition border-t-4 border-primary"
+        >
+          <h4 class="text-xl font-semibold text-primary mb-3">Vision</h4>
+          <p class="text-gray-600 text-sm">
+            A world where technology restores balance — helping individuals reconnect with calm,
+            nature, and purpose.
           </p>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Vision -->
-            <div
-              class="relative p-8 rounded-2xl bg-white/5 border border-white/10 shadow-lg hover:shadow-[0_0_30px_rgba(79,164,154,0.25)] transition"
-            >
-              <h3 class="text-xl font-semibold mb-2 text-primary">Vision</h3>
-              <p class="text-slate-300 text-sm">
-                Build a digital ecosystem where technology nurtures mental wellness and
-                environmental balance.
-              </p>
-            </div>
-
-            <!-- Mission -->
-            <div
-              class="relative p-8 rounded-2xl bg-white/5 border border-white/10 shadow-lg hover:shadow-[0_0_30px_rgba(255,213,128,0.25)] transition"
-            >
-              <h3 class="text-xl font-semibold mb-2 text-accent">Mission</h3>
-              <p class="text-slate-300 text-sm">
-                Create accessible, low-energy wellness tools that help people find peace without
-                compromising the planet.
-              </p>
-            </div>
-
-            <!-- Story -->
-            <div
-              class="relative p-8 rounded-2xl bg-white/5 border border-white/10 shadow-lg hover:shadow-[0_0_30px_rgba(90,103,216,0.25)] transition"
-            >
-              <h3 class="text-xl font-semibold mb-2 text-tech">Story</h3>
-              <p class="text-slate-300 text-sm">
-                Calmiqs began with a simple idea — combine design, AI, and empathy to craft tools
-                that improve emotional wellbeing while respecting our shared environment.
-              </p>
-            </div>
-          </div>
         </div>
-      </section>
 
-      <!-- VALUES / TEAM -->
-      <section class="py-16">
+        <!-- Mission -->
         <div
-          class="max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+          class="p-8 rounded-2xl bg-white shadow-md hover:shadow-xl transition border-t-4 border-accent"
         >
-          <div>
-            <h3 class="text-2xl font-bold text-primary">Our Values</h3>
-            <ul class="mt-4 space-y-2 text-slate-300 list-disc list-inside">
-              <li>Privacy-first by design</li>
-              <li>Minimal compute, maximal calm</li>
-              <li>Eco-friendly, human-centered approach</li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-2xl font-bold text-tech">The Team</h3>
-            <p class="text-slate-300 mt-4">
-              We’re a small, global group of designers, engineers, and psychologists passionate
-              about sustainable mental wellness.
-            </p>
-          </div>
+          <h4 class="text-xl font-semibold text-accent mb-3">Mission</h4>
+          <p class="text-gray-600 text-sm">
+            To design eco-conscious, AI-driven wellness tools that nurture mindfulness while
+            minimizing digital footprint.
+          </p>
         </div>
-      </section>
-    </main>
 
-    <!-- FOOTER -->
-    <footer class="border-t border-white/5 mt-20 py-10 px-6 md:px-12 bg-[#0b1020]/80 backdrop-blur">
-      <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-tech"></div>
-          <div>
-            <div class="font-semibold">Calmiqs</div>
-            <div class="text-sm text-slate-400">Wellness with a lighter footprint</div>
-          </div>
+        <!-- Story -->
+        <div
+          class="p-8 rounded-2xl bg-white shadow-md hover:shadow-xl transition border-t-4 border-tech"
+        >
+          <h4 class="text-xl font-semibold text-tech mb-3">Story</h4>
+          <p class="text-gray-600 text-sm">
+            Calmiqs started as a vision shared by designers, engineers, and psychologists seeking to
+            blend empathy with innovation for genuine wellbeing.
+          </p>
         </div>
-        <div class="text-sm text-slate-400">
+      </div>
+    </section>
+
+    <!-- 🌱 Values -->
+    <section class="max-w-5xl mx-auto py-16 px-6 grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h3 class="text-2xl font-bold text-primary mb-4">Our Values</h3>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li>Mindful design & responsible AI</li>
+          <li>Low-energy, sustainable technology</li>
+          <li>Transparent, privacy-first experiences</li>
+          <li>Empathy-driven innovation</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-2xl font-bold text-tech mb-4">Our Team</h3>
+        <p class="text-gray-600">
+          We are a diverse team of innovators, psychologists, and creators passionate about
+          reshaping wellness through intentional technology.
+        </p>
+      </div>
+    </section>
+
+    <!-- 🌿 Footer -->
+    <footer class="bg-white border-t border-gray-200 py-8 mt-20">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center px-6">
+        <p class="text-gray-600">
           ©
           <span id="year"></span>
-          Calmiqs — All rights reserved
+          Calmiqs — Wellness with a lighter footprint
+        </p>
+        <div class="flex gap-4 text-sm text-gray-500 mt-4 md:mt-0">
+          <a href="privacy.html" class="hover:text-primary">Privacy</a>
+          <a href="terms.html" class="hover:text-primary">Terms</a>
         </div>
       </div>
     </footer>
 
-    <!-- JS -->
     <script>
-      // Mobile nav toggle
-      document.getElementById("mobileNavBtn").addEventListener("click", function () {
-        const m = document.getElementById("mobileNav");
-        m.classList.toggle("hidden");
-      });
-      // Footer year
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
   </body>
