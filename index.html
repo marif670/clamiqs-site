@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calmiqs – Wellness & Eco Balance</title>
 
-    <!-- ✅ TailwindCSS CDN -->
+    <!-- Tailwind CDN (dev only) -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind custom config -->
     <script>
       tailwind.config = {
         theme: {
@@ -23,7 +25,9 @@
         },
       };
     </script>
-    <link rel="stylesheet" href="./assets/css/style.css?v=5" />
+
+    <!-- IMPORTANT: use absolute root path to avoid duplicated relative paths -->
+    <link rel="stylesheet" href="/assets/css/style.css?v=1" />
   </head>
   <style>
     @keyframes gradientMove {
