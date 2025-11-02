@@ -5,33 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calmiqs | Blog</title>
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            colors: {
-              primary: "#4FA49A",
-              accent: "#FFD580",
-              tech: "#5A67D8",
-            },
+            colors: { primary: "#4FA49A", accent: "#FFD580", tech: "#5A67D8" },
             fontFamily: { sans: ["Poppins", "sans-serif"] },
           },
         },
       };
     </script>
-
-    <link rel="stylesheet" href="/assets/css/style.css?v=13" />
+    <link rel="stylesheet" href="/assets/css/style.css?v=14" />
   </head>
 
   <body class="font-sans bg-[#F9FAFB] text-gray-800">
-    <!-- 🌿 Header -->
+    <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
       <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
-        <h1 class="text-2xl font-bold text-primary">
-          <a href="index.html">Calmiqs</a>
-        </h1>
+        <h1 class="text-2xl font-bold text-primary"><a href="index.html">Calmiqs</a></h1>
         <nav>
           <ul class="flex gap-6 text-gray-700">
             <li><a href="index.html" class="hover:text-primary">Home</a></li>
@@ -46,12 +38,11 @@
       </div>
     </header>
 
-    <!-- 📰 Hero -->
+    <!-- Hero -->
     <section class="relative text-center py-24 px-6 text-white overflow-hidden">
       <div
         class="absolute inset-0 bg-gradient-to-br from-primary via-accent to-tech animate-gradient bg-[length:400%_400%]"
       ></div>
-
       <div class="relative z-10">
         <h2 class="text-4xl sm:text-5xl font-bold mb-6 drop-shadow-lg">
           Explore Wellness & Sustainability
@@ -62,71 +53,92 @@
       </div>
     </section>
 
-    <!-- 🔍 Search -->
+    <!-- Search -->
     <div class="max-w-6xl mx-auto px-4 mt-10">
       <input
         id="searchInput"
         type="text"
         placeholder="Search articles..."
-        class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:outline-none mb-10"
+        class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary mb-10"
       />
     </div>
 
-    <!-- 🧱 Blog Grid -->
+    <!-- Blog Grid -->
     <main
       id="blogGrid"
-      class="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 pb-20"
+      class="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 pb-10"
     ></main>
 
-    <!-- 🌱 Footer -->
-    <footer class="bg-gray-100 py-6 mt-20 text-center text-gray-600 text-sm">
+    <!-- Pagination -->
+    <div id="pagination" class="flex justify-center gap-3 pb-20"></div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-6 text-center text-gray-600 text-sm">
       © 2025 Calmiqs — Wellness through AI and Sustainability.
     </footer>
 
-    <!-- ⚙️ Script -->
+    <!-- Script -->
     <script>
       (() => {
-        const blogGrid = document.getElementById("blogGrid");
+        const grid = document.getElementById("blogGrid");
+        const pagination = document.getElementById("pagination");
         const searchInput = document.getElementById("searchInput");
-        let blogPosts = {};
+        const perPage = 6;
+        let currentPage = 1;
+        let posts = {};
 
-        async function fetchPosts() {
+        async function loadPosts() {
           const res = await fetch("/assets/data/posts.json");
-          blogPosts = await res.json();
-          renderPosts();
+          posts = await res.json();
+          render();
         }
 
-        function renderPosts(filter = "") {
-          blogGrid.innerHTML = "";
-          const posts = Object.entries(blogPosts).filter(([slug, post]) =>
-            post.title.toLowerCase().includes(filter.toLowerCase())
+        function render(filter = "") {
+          const list = Object.entries(posts).filter(([slug, p]) =>
+            p.title.toLowerCase().includes(filter.toLowerCase())
           );
+          const totalPages = Math.ceil(list.length / perPage);
+          const start = (currentPage - 1) * perPage;
+          const pagePosts = list.slice(start, start + perPage);
 
-          if (posts.length === 0) {
-            blogGrid.innerHTML =
-              '<p class="text-gray-500 text-center col-span-full">No posts found.</p>';
-            return;
-          }
+          grid.innerHTML = pagePosts
+            .map(
+              ([slug, p]) => `
+              <a href="post-template.html?post=${slug}" class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 block">
+                <img src="${p.image}" class="w-full h-48 object-cover" alt="${p.title}" />
+                <div class="p-5">
+                  <h3 class="text-xl font-semibold text-primary mb-2">${p.title}</h3>
+                  <p class="text-gray-600 mb-3">${p.excerpt}</p>
+                  <p class="text-sm text-gray-400">${p.date}</p>
+                </div>
+              </a>`
+            )
+            .join("");
 
-          posts.forEach(([slug, post]) => {
-            const card = document.createElement("a");
-            card.href = `post-template.html?post=${slug}`;
-            card.className =
-              "bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 block";
-            card.innerHTML = `
-              <img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover" />
-              <div class="p-5">
-                <h3 class="text-xl font-semibold text-primary mb-2">${post.title}</h3>
-                <p class="text-gray-600 mb-3">${post.excerpt}</p>
-                <p class="text-sm text-gray-400">${post.date}</p>
-              </div>
-            `;
-            blogGrid.appendChild(card);
-          });
+          pagination.innerHTML = Array.from(
+            { length: totalPages },
+            (_, i) =>
+              `<button class="px-4 py-2 rounded-lg ${
+                i + 1 === currentPage
+                  ? "bg-primary text-white"
+                  : "bg-white text-primary border border-primary"
+              } hover:bg-accent hover:text-white transition" onclick="goPage(${i + 1})">${
+                i + 1
+              }</button>`
+          ).join("");
         }
 
-        searchInput.addEventListener("input", (e) => renderPosts(e.target.value));
-        fetchPosts();
+        window.goPage = (p) => {
+          currentPage = p;
+          render(searchInput.value);
+        };
+
+        searchInput.addEventListener("input", (e) => {
+          currentPage = 1;
+          render(e.target.value);
+        });
+
+        loadPosts();
       })();
     </script>
   </body>
