@@ -3,206 +3,258 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog Editor | Admin Panel</title>
-    <link href="assets/css/tailwind.css" rel="stylesheet" />
-    <link href="assets/css/style.css" rel="stylesheet" />
-    <style>
-      body {
-        background: #f8fafc;
-      }
-      .editor-section {
-        max-width: 900px;
-        margin: 2rem auto;
-      }
-      textarea,
-      input {
-        width: 100%;
-        border: 1px solid #ddd;
-        padding: 8px;
-        border-radius: 6px;
-      }
-      #preview {
-        background: #fff;
-        border-radius: 10px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      }
-      .post-card {
-        background: white;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-        cursor: pointer;
-        transition: 0.2s;
-      }
-      .post-card:hover {
-        background: #f0f9ff;
-      }
-    </style>
+    <title>Calmiqs Blog Editor</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4FA49A",
+              accent: "#FFD580",
+              tech: "#5A67D8",
+            },
+            fontFamily: {
+              sans: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="/assets/css/style.css" />
   </head>
-  <body class="min-h-screen">
-    <!-- 🔐 LOGIN SCREEN -->
-    <div id="login-screen" class="flex items-center justify-center min-h-screen">
-      <div class="bg-white p-8 rounded-lg shadow-md w-80">
-        <h2 class="text-xl font-bold mb-4 text-center">Admin Login</h2>
+
+  <body class="font-sans bg-[#F9FAFB] text-gray-800 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
+        <h1 class="text-2xl font-bold text-primary">
+          <a href="index.html">Calmiqs</a>
+        </h1>
+        <nav>
+          <ul class="flex gap-6 text-gray-700">
+            <li><a href="index.html" class="hover:text-primary">Home</a></li>
+            <li><a href="blog.html" class="hover:text-primary">Blog</a></li>
+            <li><a href="tools.html" class="hover:text-primary">Tools</a></li>
+            <li><a href="contact.html" class="hover:text-primary">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Login Section -->
+    <section id="login-section" class="flex items-center justify-center h-[80vh]">
+      <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-md text-center">
+        <h2 class="text-2xl font-bold text-primary mb-4">Admin Login</h2>
         <input
+          id="password"
           type="password"
-          id="admin-password"
-          placeholder="Enter Password"
-          class="w-full border p-2 rounded mb-3"
+          placeholder="Enter password"
+          class="border rounded-lg w-full p-3 mb-4"
         />
-        <button id="login-btn" class="bg-blue-600 text-white px-4 py-2 rounded w-full">
+        <button
+          id="login-btn"
+          class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-tech transition"
+        >
           Login
         </button>
-        <p id="login-error" class="text-red-600 text-sm mt-2 hidden">Incorrect password!</p>
+        <p id="login-error" class="text-red-500 text-sm mt-3 hidden">
+          Incorrect password. Please try again.
+        </p>
       </div>
-    </div>
+    </section>
 
-    <!-- ✍️ EDITOR DASHBOARD -->
-    <div id="editor-screen" class="hidden p-6">
-      <h1 class="text-2xl font-bold mb-4 text-center">📝 Blog Editor Dashboard</h1>
+    <!-- Editor Section -->
+    <main id="editor-section" class="hidden max-w-6xl mx-auto py-10">
+      <h2 class="text-3xl font-bold text-primary mb-6">Blog Manager</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 editor-section">
-        <!-- 🧩 Editor Form -->
-        <div>
-          <h2 class="font-semibold mb-2">Create / Edit Blog</h2>
-          <input type="hidden" id="edit-index" value="" />
-          <input id="title" type="text" placeholder="Post Title" class="mb-2" />
-          <input id="date" type="date" class="mb-2" />
-          <textarea
-            id="content"
-            rows="10"
-            placeholder="Write blog content here..."
-            class="mb-2"
-          ></textarea>
-          <button id="save-btn" class="bg-green-600 text-white px-4 py-2 rounded mr-2">
-            💾 Save Post
-          </button>
-          <button id="clear-btn" class="bg-gray-500 text-white px-4 py-2 rounded">🧹 Clear</button>
+      <div class="grid md:grid-cols-2 gap-10">
+        <!-- Create / Edit Form -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h3 class="text-xl font-semibold mb-4">Create / Edit Post</h3>
+          <form id="postForm" class="space-y-4">
+            <input type="hidden" id="editIndex" value="" />
+            <input
+              id="title"
+              type="text"
+              placeholder="Post Title"
+              class="border rounded-lg w-full p-3"
+              required
+            />
+            <input
+              id="author"
+              type="text"
+              placeholder="Author"
+              class="border rounded-lg w-full p-3"
+              required
+            />
+            <textarea
+              id="content"
+              rows="6"
+              placeholder="Write your content..."
+              class="border rounded-lg w-full p-3"
+              required
+            ></textarea>
+            <input
+              id="image"
+              type="text"
+              placeholder="Image URL (optional)"
+              class="border rounded-lg w-full p-3"
+            />
+            <button
+              type="submit"
+              class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-tech transition"
+            >
+              Save Post
+            </button>
+          </form>
         </div>
 
-        <!-- 👁️ Live Preview -->
-        <div>
-          <h2 class="font-semibold mb-2">Live Preview</h2>
-          <div id="preview">
-            <h3 class="text-xl font-bold" id="preview-title">Post title...</h3>
-            <p class="text-sm text-gray-500" id="preview-date">Post date...</p>
-            <div id="preview-content" class="mt-3 text-gray-800">
-              Start writing to see preview...
-            </div>
+        <!-- Preview -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h3 class="text-xl font-semibold mb-4">Live Preview</h3>
+          <div id="preview" class="border rounded-lg p-4 bg-[#F9FAFB]">
+            <p class="text-gray-500 italic text-center">Start typing to preview...</p>
           </div>
         </div>
       </div>
 
-      <!-- 📋 Existing Posts -->
-      <div class="editor-section">
-        <h2 class="font-semibold text-lg mb-2">Existing Posts</h2>
-        <div id="posts-list"></div>
+      <!-- Existing Posts -->
+      <div class="mt-10">
+        <h3 class="text-2xl font-semibold mb-4">Existing Posts</h3>
+        <ul id="postList" class="space-y-3"></ul>
       </div>
-    </div>
+    </main>
 
     <script>
-      const PASSWORD = "admin123"; // change as needed
+      const passwordInput = document.getElementById("password");
       const loginBtn = document.getElementById("login-btn");
-      const loginScreen = document.getElementById("login-screen");
-      const editorScreen = document.getElementById("editor-screen");
+      const loginSection = document.getElementById("login-section");
+      const editorSection = document.getElementById("editor-section");
       const loginError = document.getElementById("login-error");
+      const preview = document.getElementById("preview");
+      const postList = document.getElementById("postList");
 
+      const ADMIN_PASSWORD = "calmiqs123"; // 🔒 Change as needed
+
+      let posts = [];
+
+      // Login logic
       loginBtn.addEventListener("click", () => {
-        const inputPass = document.getElementById("admin-password").value;
-        if (inputPass === PASSWORD) {
-          loginScreen.classList.add("hidden");
-          editorScreen.classList.remove("hidden");
-          loadPosts();
+        if (passwordInput.value === ADMIN_PASSWORD) {
+          loginSection.classList.add("hidden");
+          editorSection.classList.remove("hidden");
         } else {
           loginError.classList.remove("hidden");
         }
       });
 
-      // ✍️ Live Preview
-      const titleInput = document.getElementById("title");
-      const dateInput = document.getElementById("date");
-      const contentInput = document.getElementById("content");
+      // Live Preview
+      const updatePreview = () => {
+        const title = document.getElementById("title").value || "Post Title";
+        const author = document.getElementById("author").value || "Author";
+        const content = document.getElementById("content").value || "Post content...";
+        const image = document.getElementById("image").value || "/assets/img/default.jpg";
 
-      function updatePreview() {
-        document.getElementById("preview-title").textContent = titleInput.value || "Post title...";
-        document.getElementById("preview-date").textContent = dateInput.value || "Post date...";
-        document.getElementById("preview-content").innerHTML =
-          contentInput.value || "Start writing to see preview...";
-      }
-      [titleInput, dateInput, contentInput].forEach((input) =>
-        input.addEventListener("input", updatePreview)
+        preview.innerHTML = `
+          <div class="rounded-lg overflow-hidden shadow-md bg-white">
+            <img src="${image}" alt="preview" class="w-full h-48 object-cover">
+            <div class="p-4">
+              <h4 class="text-2xl font-bold mb-2 text-primary">${title}</h4>
+              <p class="text-sm text-gray-600 mb-2">by ${author}</p>
+              <p class="text-gray-700">${content.substring(0, 150)}...</p>
+            </div>
+          </div>
+        `;
+      };
+
+      ["title", "author", "content", "image"].forEach((id) =>
+        document.getElementById(id).addEventListener("input", updatePreview)
       );
 
-      // 🗂️ Load & Render Posts
+      // Load posts from JSON
       async function loadPosts() {
         try {
-          const res = await fetch("assets/data/posts.json");
-          const posts = await res.json();
-          renderPosts(posts);
+          const res = await fetch("/assets/data/posts.json");
+          posts = await res.json();
+          renderPosts();
         } catch (err) {
-          console.error("Error loading posts:", err);
+          console.error("Failed to load posts:", err);
         }
       }
 
-      function renderPosts(posts) {
-        const list = document.getElementById("posts-list");
-        list.innerHTML = "";
+      // Render posts
+      function renderPosts() {
+        postList.innerHTML = "";
         posts.forEach((post, index) => {
-          const div = document.createElement("div");
-          div.className = "post-card";
-          div.innerHTML = `<h3 class='font-bold text-lg'>${post.title}</h3>
-                         <p class='text-gray-600 text-sm mb-2'>${post.date}</p>
-                         <button class='bg-blue-500 text-white px-3 py-1 rounded' onclick='editPost(${index})'>Edit</button>`;
-          list.appendChild(div);
+          const li = document.createElement("li");
+          li.className = "bg-white shadow rounded-lg p-4 flex justify-between items-center";
+          li.innerHTML = `
+            <div>
+              <h4 class="font-semibold">${post.title}</h4>
+              <p class="text-sm text-gray-600">${post.author}</p>
+            </div>
+            <div class="flex gap-3">
+              <button class="text-primary hover:underline" onclick="editPost(${index})">Edit</button>
+              <button class="text-red-500 hover:underline" onclick="deletePost(${index})">Delete</button>
+            </div>
+          `;
+          postList.appendChild(li);
         });
       }
 
-      // ✏️ Edit Post
-      async function editPost(index) {
-        const res = await fetch("assets/data/posts.json");
-        const posts = await res.json();
+      // Edit existing post
+      window.editPost = function (index) {
         const post = posts[index];
-        document.getElementById("edit-index").value = index;
-        titleInput.value = post.title;
-        dateInput.value = post.date;
-        contentInput.value = post.content;
+        document.getElementById("title").value = post.title;
+        document.getElementById("author").value = post.author;
+        document.getElementById("content").value = post.content;
+        document.getElementById("image").value = post.image || "";
+        document.getElementById("editIndex").value = index;
         updatePreview();
-      }
+      };
 
-      // 💾 Save or Update Post
-      document.getElementById("save-btn").addEventListener("click", async () => {
-        const title = titleInput.value.trim();
-        const date = dateInput.value;
-        const content = contentInput.value.trim();
-        if (!title || !date || !content) return alert("All fields are required!");
-
-        const res = await fetch("assets/data/posts.json");
-        const posts = await res.json();
-        const editIndex = document.getElementById("edit-index").value;
-
-        if (editIndex !== "") {
-          posts[editIndex] = { title, date, content };
-        } else {
-          posts.push({ title, date, content });
+      // Delete post
+      window.deletePost = function (index) {
+        if (confirm("Delete this post?")) {
+          posts.splice(index, 1);
+          renderPosts();
+          savePosts();
         }
+      };
 
-        // Save back to JSON (in real case, you'd POST to a server)
-        localStorage.setItem("posts", JSON.stringify(posts));
-        alert("Post saved (locally). Server integration needed to persist.");
-        renderPosts(posts);
-        clearForm();
+      // Save post
+      document.getElementById("postForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const newPost = {
+          title: document.getElementById("title").value,
+          author: document.getElementById("author").value,
+          content: document.getElementById("content").value,
+          image: document.getElementById("image").value,
+          date: new Date().toISOString(),
+        };
+
+        const index = document.getElementById("editIndex").value;
+        if (index) posts[index] = newPost;
+        else posts.push(newPost);
+
+        savePosts();
+        renderPosts();
+        e.target.reset();
+        preview.innerHTML =
+          "<p class='text-gray-500 italic text-center'>Start typing to preview...</p>";
       });
 
-      // 🧹 Clear
-      document.getElementById("clear-btn").addEventListener("click", clearForm);
-      function clearForm() {
-        titleInput.value = "";
-        dateInput.value = "";
-        contentInput.value = "";
-        document.getElementById("edit-index").value = "";
-        updatePreview();
+      // Save posts to localStorage (JSON write disabled on Pages)
+      function savePosts() {
+        localStorage.setItem("calmiqs_posts", JSON.stringify(posts));
+        alert("Post saved (local only). Sync manually to /assets/data/posts.json");
       }
+
+      loadPosts();
     </script>
   </body>
 </html>
