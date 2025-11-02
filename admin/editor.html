@@ -215,8 +215,8 @@
         updatePreview();
       }
 
-      // === Save Posts ===
-      document.getElementById("saveBtn").addEventListener("click", () => {
+      // === Save Posts (Cloudflare Auto-Update) ===
+      document.getElementById("saveBtn").addEventListener("click", async () => {
         const key = document.getElementById("key").value.trim();
         if (!key) return alert("Please provide a key (slug).");
 
@@ -228,17 +228,24 @@
           content: document.getElementById("content").value.trim(),
         };
 
-        const blob = new Blob([JSON.stringify(posts, null, 2)], {
-          type: "application/json",
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "posts.json";
-        a.click();
-        URL.revokeObjectURL(url);
+        try {
+          const response = await fetch("/update-post.json", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(posts),
+          });
 
-        alert("✅ Downloaded updated posts.json. Replace it in /assets/data/ to apply changes.");
+          const result = await response.json();
+
+          if (result.success) {
+            alert("✅ posts.json updated successfully in GitHub!");
+          } else {
+            alert("❌ Update failed: " + (result.error || "Unknown error"));
+          }
+        } catch (err) {
+          console.error(err);
+          alert("⚠️ Error connecting to update-post.json function. Check console for details.");
+        }
       });
 
       // === 🧠 Live Preview Logic ===
