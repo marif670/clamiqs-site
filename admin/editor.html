@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calmiqs Blog Editor</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4FA49A",
+              accent: "#FFD580",
+              tech: "#5A67D8",
+            },
+            fontFamily: { sans: ["Poppins", "sans-serif"] },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=12" />
+  </head>
+  <body class="font-sans bg-[#F9FAFB] text-gray-800 min-h-screen flex flex-col">
+    <header class="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-50">
+      <h1 class="text-2xl font-bold text-primary">🧠 Calmiqs Blog Editor</h1>
+      <button
+        id="logoutBtn"
+        class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-accent transition"
+      >
+        Logout
+      </button>
+    </header>
+
+    <main class="flex-1 max-w-5xl mx-auto w-full p-6">
+      <div id="authSection" class="text-center">
+        <h2 class="text-3xl font-bold mb-4 text-primary">Login</h2>
+        <input
+          type="password"
+          id="passwordInput"
+          placeholder="Enter editor password..."
+          class="px-4 py-3 border rounded-lg w-full sm:w-1/2 text-center mb-4 shadow focus:ring-2 focus:ring-primary"
+        />
+        <button
+          id="loginBtn"
+          class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-accent transition shadow"
+        >
+          Login
+        </button>
+        <p class="mt-3 text-gray-500 text-sm">
+          Default password:
+          <b>Hadia@2017</b>
+          (change in code)
+        </p>
+      </div>
+
+      <div id="editorSection" class="hidden">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-3xl font-bold text-primary">Manage Posts</h2>
+          <button
+            id="addPostBtn"
+            class="bg-tech text-white px-5 py-2 rounded-lg hover:bg-accent transition shadow"
+          >
+            ➕ New Post
+          </button>
+        </div>
+
+        <div id="postsContainer" class="grid gap-6"></div>
+
+        <div class="mt-10">
+          <h3 class="text-2xl font-semibold mb-3">📦 JSON Preview</h3>
+          <textarea
+            id="jsonOutput"
+            class="w-full h-64 border rounded-lg p-4 font-mono text-sm shadow"
+          ></textarea>
+          <p class="text-gray-500 text-sm mt-2">
+            Copy this updated JSON and replace your
+            <code>/assets/data/posts.json</code>
+            file in GitHub.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-gray-100 py-6 text-center text-gray-500 text-sm">
+      Calmiqs JSON Editor — Local Admin Tool
+    </footer>
+
+    <script>
+      (() => {
+        const PASSWORD = "calmiqs2025"; // change this
+        const authSection = document.getElementById("authSection");
+        const editorSection = document.getElementById("editorSection");
+        const postsContainer = document.getElementById("postsContainer");
+        const jsonOutput = document.getElementById("jsonOutput");
+
+        let posts = {};
+
+        // 🔒 Login handling
+        document.getElementById("loginBtn").addEventListener("click", () => {
+          const input = document.getElementById("passwordInput").value.trim();
+          if (input === PASSWORD) {
+            authSection.classList.add("hidden");
+            editorSection.classList.remove("hidden");
+            loadPosts();
+          } else {
+            alert("Incorrect password.");
+          }
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          location.reload();
+        });
+
+        async function loadPosts() {
+          try {
+            const res = await fetch("/assets/data/posts.json");
+            posts = await res.json();
+            renderPosts();
+          } catch (e) {
+            alert("Failed to load posts.json");
+          }
+        }
+
+        function renderPosts() {
+          postsContainer.innerHTML = "";
+          Object.entries(posts).forEach(([key, post]) => {
+            const card = document.createElement("div");
+            card.className = "bg-white shadow rounded-xl p-4 border border-gray-200";
+            card.innerHTML = `
+              <div class="flex justify-between items-center">
+                <h3 class="text-xl font-semibold text-primary">${post.title}</h3>
+                <div class="flex gap-2">
+                  <button class="editBtn bg-accent text-white px-3 py-1 rounded">Edit</button>
+                  <button class="deleteBtn bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                </div>
+              </div>
+              <p class="text-gray-500 mt-1">${post.date}</p>
+              <p class="mt-2 text-gray-700">${post.excerpt}</p>
+            `;
+            card.querySelector(".editBtn").addEventListener("click", () => editPost(key));
+            card.querySelector(".deleteBtn").addEventListener("click", () => {
+              if (confirm(`Delete post "${post.title}"?`)) {
+                delete posts[key];
+                renderPosts();
+                updateJSONPreview();
+              }
+            });
+            postsContainer.appendChild(card);
+          });
+          updateJSONPreview();
+        }
+
+        function editPost(key) {
+          const post = posts[key];
+          const formHTML = `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+              <div class="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-lg">
+                <h3 class="text-2xl font-semibold text-primary mb-4">✏️ Edit Post</h3>
+                <label class="block mb-2">Title:</label>
+                <input id="titleInput" value="${post.title}" class="w-full p-2 border rounded mb-3" />
+                <label class="block mb-2">Date:</label>
+                <input id="dateInput" value="${post.date}" class="w-full p-2 border rounded mb-3" />
+                <label class="block mb-2">Image URL:</label>
+                <input id="imageInput" value="${post.image}" class="w-full p-2 border rounded mb-3" />
+                <label class="block mb-2">Excerpt:</label>
+                <textarea id="excerptInput" class="w-full p-2 border rounded mb-3">${post.excerpt}</textarea>
+                <label class="block mb-2">Content (HTML):</label>
+                <textarea id="contentInput" class="w-full p-2 border rounded mb-4 h-40">${post.content}</textarea>
+                <div class="flex justify-end gap-3">
+                  <button id="cancelEdit" class="px-4 py-2 rounded bg-gray-300">Cancel</button>
+                  <button id="saveEdit" class="px-4 py-2 rounded bg-primary text-white">Save</button>
+                </div>
+              </div>
+            </div>`;
+          document.body.insertAdjacentHTML("beforeend", formHTML);
+
+          document.getElementById("cancelEdit").onclick = () =>
+            document.querySelector(".fixed").remove();
+          document.getElementById("saveEdit").onclick = () => {
+            posts[key] = {
+              title: document.getElementById("titleInput").value,
+              date: document.getElementById("dateInput").value,
+              image: document.getElementById("imageInput").value,
+              excerpt: document.getElementById("excerptInput").value,
+              content: document.getElementById("contentInput").value,
+            };
+            document.querySelector(".fixed").remove();
+            renderPosts();
+          };
+        }
+
+        document.getElementById("addPostBtn").addEventListener("click", () => {
+          const key = prompt("Enter new post key (e.g., mindful-living):");
+          if (key && !posts[key]) {
+            posts[key] = {
+              title: "New Post",
+              date: new Date().toLocaleDateString(),
+              image: "",
+              excerpt: "",
+              content: "",
+            };
+            renderPosts();
+            updateJSONPreview();
+          } else if (posts[key]) {
+            alert("A post with that key already exists!");
+          }
+        });
+
+        function updateJSONPreview() {
+          jsonOutput.value = JSON.stringify(posts, null, 2);
+        }
+      })();
+    </script>
+  </body>
+</html>
