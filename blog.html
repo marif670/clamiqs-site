@@ -75,12 +75,31 @@
         </p>
       </div>
     </section>
+    <!-- 🔍 Blog Search + Dynamic Posts -->
+    <main class="max-w-6xl mx-auto py-16 px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-primary mb-4">Latest Wellness Articles</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Discover stories and tools for a calmer, greener lifestyle.
+        </p>
+      </div>
 
-    <!-- 📰 Blog Section -->
-    <section class="max-w-6xl mx-auto py-20 px-6">
-      <h3 class="text-3xl font-bold text-primary mb-10 text-center">Featured Articles</h3>
-      <div id="blog-grid" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"></div>
-    </section>
+      <!-- 🔍 Search Input -->
+      <div class="mb-10 flex justify-center">
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search articles..."
+          class="w-full sm:w-1/2 px-4 py-3 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      </div>
+
+      <!-- 🧠 Dynamic Blog Grid -->
+      <div
+        id="blogGrid"
+        class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center"
+      ></div>
+    </main>
 
     <!-- 🌿 Footer -->
     <footer class="bg-white border-t border-gray-200 py-8 mt-20">
@@ -165,6 +184,58 @@
 
         blogGrid.appendChild(card);
       });
+    </script>
+    <script>
+      const blogPosts = {
+        "mindful-breathing": {
+          title: "The Art of Mindful Breathing",
+          date: "November 2, 2025",
+          image: "/assets/images/mindful-breathing.jpg",
+          excerpt: "Learn how controlled breathing enhances mindfulness and calm.",
+        },
+        "eco-habits": {
+          title: "5 Small Eco Habits That Reduce Stress",
+          date: "November 4, 2025",
+          image: "/assets/images/eco-habits.jpg",
+          excerpt:
+            "Simple sustainability practices to boost serenity and reduce your carbon footprint.",
+        },
+      };
+
+      const blogGrid = document.getElementById("blogGrid");
+
+      function renderPosts(filter = "") {
+        blogGrid.innerHTML = "";
+        const posts = Object.entries(blogPosts).filter(([key, post]) =>
+          post.title.toLowerCase().includes(filter.toLowerCase())
+        );
+
+        if (posts.length === 0) {
+          blogGrid.innerHTML =
+            '<p class="text-gray-500 text-center col-span-full">No posts found.</p>';
+          return;
+        }
+
+        posts.forEach(([key, post]) => {
+          const card = document.createElement("a");
+          card.href = `post-template.html?post=${key}`;
+          card.className =
+            "bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 block max-w-sm";
+          card.innerHTML = `
+        <img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover" />
+        <div class="p-5">
+          <h3 class="text-xl font-semibold text-primary mb-2">${post.title}</h3>
+          <p class="text-gray-600 mb-3">${post.excerpt}</p>
+          <p class="text-sm text-gray-400">${post.date}</p>
+        </div>
+      `;
+          blogGrid.appendChild(card);
+        });
+      }
+
+      const searchInput = document.getElementById("searchInput");
+      searchInput.addEventListener("input", (e) => renderPosts(e.target.value));
+      renderPosts();
     </script>
   </body>
 </html>
