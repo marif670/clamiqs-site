@@ -23,250 +23,197 @@
         },
       };
     </script>
-    <link rel="stylesheet" href="/assets/css/style.css?v=12" />
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=14" />
   </head>
-  <body class="bg-[#F9FAFB] text-gray-800 font-sans min-h-screen">
-    <!-- 🔒 Login Section -->
-    <section id="authSection" class="flex items-center justify-center min-h-screen">
-      <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
-        <h1 class="text-3xl font-bold text-primary mb-4">🔒 Calmiqs Admin Login</h1>
+
+  <body class="font-sans bg-[#F9FAFB] text-gray-800">
+    <!-- 🌿 Login Overlay -->
+    <div
+      id="loginScreen"
+      class="fixed inset-0 flex flex-col justify-center items-center bg-white z-50"
+    >
+      <h1 class="text-3xl font-bold text-primary mb-6">Calmiqs Admin</h1>
+      <div class="bg-gray-50 border border-gray-200 p-6 rounded-xl shadow-md w-80">
+        <label class="block mb-2 font-medium text-gray-700">Enter Admin Password</label>
         <input
-          id="passwordInput"
           type="password"
-          placeholder="Enter password"
-          class="w-full border rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-primary"
+          id="passwordInput"
+          class="w-full border border-gray-300 p-2 rounded-lg mb-4"
+          placeholder="********"
         />
         <button
-          id="loginBtn"
-          class="bg-primary hover:bg-tech text-white font-medium px-6 py-2 rounded-lg transition w-full"
+          onclick="checkPassword()"
+          class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-tech transition w-full"
         >
           Login
         </button>
+        <p id="errorMsg" class="text-red-500 text-sm mt-3 hidden">Incorrect password. Try again.</p>
       </div>
-    </section>
+    </div>
 
-    <!-- 📝 Editor Section -->
-    <section id="editorSection" class="hidden max-w-5xl mx-auto p-6">
-      <h1 class="text-4xl font-bold text-primary mb-6 text-center">🪶 Calmiqs Blog Editor</h1>
-
-      <!-- File Controls -->
-      <div class="flex justify-between items-center mb-4">
-        <button
-          id="loadBtn"
-          class="bg-accent text-gray-800 px-4 py-2 rounded-lg shadow hover:bg-yellow-400 transition"
-        >
-          Load Posts
-        </button>
-        <button
-          id="saveBtn"
-          class="bg-primary text-white px-4 py-2 rounded-lg shadow hover:bg-tech transition"
-        >
-          Save Changes
-        </button>
+    <!-- 🌿 Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+      <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
+        <h1 class="text-2xl font-bold text-primary"><a href="index.html">Calmiqs</a></h1>
+        <nav>
+          <ul class="flex gap-6 text-gray-700">
+            <li><a href="index.html" class="hover:text-primary">Home</a></li>
+            <li><a href="blog.html" class="hover:text-primary">Blog</a></li>
+            <li><a href="tools.html" class="hover:text-primary">Tools</a></li>
+          </ul>
+        </nav>
       </div>
+    </header>
 
-      <!-- Posts Dropdown -->
-      <div class="mb-4">
-        <label for="postSelect" class="block text-sm font-medium mb-1">Select Post:</label>
-        <select
-          id="postSelect"
-          class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-        ></select>
-      </div>
+    <!-- ✍️ Blog Editor -->
+    <main id="editorPanel" class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 p-8 hidden">
+      <!-- Left: Editor -->
+      <section class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+        <h2 class="text-2xl font-semibold mb-4 text-primary">📝 Blog Post Editor</h2>
 
-      <!-- Editor Form -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label class="block text-sm font-medium mb-1">Post Key (slug)</label>
-          <input
-            id="key"
-            type="text"
-            placeholder="e.g., mindful-breathing"
-            class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+        <form id="blogForm" class="space-y-4">
+          <div>
+            <label class="block font-medium mb-1">Title</label>
+            <input
+              type="text"
+              id="title"
+              class="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="Enter blog title"
+              required
+            />
+          </div>
 
-          <label class="block text-sm font-medium mb-1">Title</label>
-          <input
-            id="title"
-            type="text"
-            placeholder="Article title"
-            class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+          <div>
+            <label class="block font-medium mb-1">Slug (unique URL)</label>
+            <input
+              type="text"
+              id="slug"
+              class="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="e.g., mindful-living-tips"
+              required
+            />
+          </div>
 
-          <label class="block text-sm font-medium mb-1">Date</label>
-          <input
-            id="date"
-            type="text"
-            placeholder="e.g., November 2, 2025"
-            class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+          <div>
+            <label class="block font-medium mb-1">Category</label>
+            <input
+              type="text"
+              id="category"
+              class="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="Wellness / Mindfulness"
+            />
+          </div>
 
-          <label class="block text-sm font-medium mb-1">Image URL</label>
-          <input
-            id="image"
-            type="text"
-            placeholder="https://..."
-            class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+          <div>
+            <label class="block font-medium mb-1">Date</label>
+            <input
+              type="date"
+              id="date"
+              class="w-full border border-gray-300 p-2 rounded-lg"
+              required
+            />
+          </div>
+
+          <div>
+            <label class="block font-medium mb-1">Image URL</label>
+            <input
+              type="text"
+              id="image"
+              class="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="/assets/img/sample.jpg"
+            />
+          </div>
+
+          <div>
+            <label class="block font-medium mb-1">Content</label>
+            <textarea
+              id="content"
+              rows="8"
+              class="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="Write your article content..."
+              required
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-tech transition"
+          >
+            Save Blog Post
+          </button>
+        </form>
+      </section>
+
+      <!-- Right: Live Preview -->
+      <section class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200 overflow-y-auto">
+        <h2 class="text-2xl font-semibold mb-4 text-primary">👁️ Live Preview</h2>
+        <div id="preview" class="prose max-w-none text-gray-700">
+          <p class="italic text-gray-400">Start typing to see your live preview...</p>
         </div>
+      </section>
+    </main>
 
-        <div>
-          <label class="block text-sm font-medium mb-1">Excerpt</label>
-          <textarea
-            id="excerpt"
-            rows="3"
-            placeholder="Short preview text..."
-            class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
-          ></textarea>
-
-          <label class="block text-sm font-medium mb-1">Content (HTML allowed)</label>
-          <textarea
-            id="content"
-            rows="10"
-            placeholder="<p>Your article here...</p>"
-            class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-          ></textarea>
-        </div>
-      </div>
-
-      <!-- Toggle Button -->
-      <button
-        onclick="document.getElementById('previewContainer').classList.toggle('hidden')"
-        class="mt-6 bg-primary text-white px-4 py-2 rounded-lg hover:bg-tech transition"
-      >
-        Toggle Preview
-      </button>
-
-      <!-- 🪶 Live Preview -->
-      <h2 class="text-2xl font-semibold mt-8 mb-4">🪶 Live Preview</h2>
-      <div id="previewContainer" class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
-        <div id="previewContent" class="prose max-w-none"></div>
-      </div>
-    </section>
-
+    <!-- 📜 Scripts -->
     <script>
-      // === Configuration ===
-      const PASSWORD = "calmiqs2025";
-      const DATA_URL = "/assets/data/posts.json";
-      let posts = {};
+      // 🧩 Simple password protection
+      const ADMIN_PASSWORD = "calmiqsadmin"; // <-- change this as needed
 
-      const authSection = document.getElementById("authSection");
-      const editorSection = document.getElementById("editorSection");
-      const passwordInput = document.getElementById("passwordInput");
-      const loginBtn = document.getElementById("loginBtn");
-      const postSelect = document.getElementById("postSelect");
+      function checkPassword() {
+        const input = document.getElementById("passwordInput").value.trim();
+        const errorMsg = document.getElementById("errorMsg");
 
-      // === Login ===
-      loginBtn.addEventListener("click", () => {
-        const input = passwordInput.value.trim();
-        if (input === PASSWORD) {
-          localStorage.setItem("calmiqsAuth", "true");
-          authSection.classList.add("hidden");
-          editorSection.classList.remove("hidden");
-          loadPosts();
+        if (input === ADMIN_PASSWORD) {
+          document.getElementById("loginScreen").classList.add("hidden");
+          document.getElementById("editorPanel").classList.remove("hidden");
         } else {
-          alert("Incorrect password.");
+          errorMsg.classList.remove("hidden");
         }
+      }
+
+      // 🪶 Live Preview
+      const form = document.getElementById("blogForm");
+      const preview = document.getElementById("preview");
+      const fields = ["title", "slug", "category", "date", "image", "content"];
+      fields.forEach((id) => {
+        document.getElementById(id).addEventListener("input", updatePreview);
       });
-
-      // Auto-login if previously logged in
-      if (localStorage.getItem("calmiqsAuth") === "true") {
-        authSection.classList.add("hidden");
-        editorSection.classList.remove("hidden");
-        loadPosts();
-      }
-
-      // === Load Posts ===
-      async function loadPosts() {
-        const response = await fetch(DATA_URL + "?v=" + Date.now());
-        posts = await response.json();
-        populateSelect();
-      }
-
-      function populateSelect() {
-        postSelect.innerHTML =
-          '<option value="">➕ New Post</option>' +
-          Object.keys(posts)
-            .map((key) => `<option value="${key}">${key}</option>`)
-            .join("");
-      }
-
-      // === Populate Form ===
-      postSelect.addEventListener("change", () => {
-        const key = postSelect.value;
-        if (!key) {
-          clearForm();
-          return;
-        }
-        const post = posts[key];
-        document.getElementById("key").value = key;
-        document.getElementById("title").value = post.title || "";
-        document.getElementById("date").value = post.date || "";
-        document.getElementById("image").value = post.image || "";
-        document.getElementById("excerpt").value = post.excerpt || "";
-        document.getElementById("content").value = post.content || "";
-        updatePreview();
-      });
-
-      function clearForm() {
-        ["key", "title", "date", "image", "excerpt", "content"].forEach(
-          (id) => (document.getElementById(id).value = "")
-        );
-        updatePreview();
-      }
-
-      // === Save Posts ===
-      document.getElementById("saveBtn").addEventListener("click", () => {
-        const key = document.getElementById("key").value.trim();
-        if (!key) return alert("Please provide a key (slug).");
-
-        posts[key] = {
-          title: document.getElementById("title").value.trim(),
-          date: document.getElementById("date").value.trim(),
-          image: document.getElementById("image").value.trim(),
-          excerpt: document.getElementById("excerpt").value.trim(),
-          content: document.getElementById("content").value.trim(),
-        };
-
-        const blob = new Blob([JSON.stringify(posts, null, 2)], {
-          type: "application/json",
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "posts.json";
-        a.click();
-        URL.revokeObjectURL(url);
-
-        alert("✅ Downloaded updated posts.json. Replace it in /assets/data/ to apply changes.");
-      });
-
-      // === 🧠 Live Preview Logic ===
-      const titleInput = document.getElementById("title");
-      const dateInput = document.getElementById("date");
-      const imageInput = document.getElementById("image");
-      const contentInput = document.getElementById("content");
-      const preview = document.getElementById("previewContent");
 
       function updatePreview() {
-        const title = titleInput.value || "Untitled Post";
-        const date = dateInput.value || "No date set";
-        const image = imageInput.value || "https://via.placeholder.com/800x400?text=Preview";
-        const content = contentInput.value || "<p>Start typing your article...</p>";
+        const title = document.getElementById("title").value || "Untitled Post";
+        const category = document.getElementById("category").value || "General";
+        const date =
+          document.getElementById("date").value || new Date().toISOString().split("T")[0];
+        const image = document.getElementById("image").value;
+        const content = document.getElementById("content").value || "Start writing your content...";
 
         preview.innerHTML = `
-          <img src="${image}" alt="${title}" class="rounded-xl mb-4 shadow-md w-full max-h-96 object-cover" />
-          <h3 class="text-3xl font-bold mb-2 text-primary">${title}</h3>
-          <p class="text-gray-500 mb-6">${date}</p>
-          <div class="text-gray-800 leading-relaxed">${content}</div>
+          <article>
+            ${image ? `<img src="${image}" alt="${title}" class="rounded-xl mb-4 shadow-md">` : ""}
+            <h1 class="text-3xl font-bold mb-2">${title}</h1>
+            <div class="text-sm text-gray-500 mb-6">${category} • ${date}</div>
+            <div class="space-y-4">${convertToHTML(content)}</div>
+          </article>
         `;
       }
 
-      [titleInput, dateInput, imageInput, contentInput].forEach((el) =>
-        el.addEventListener("input", updatePreview)
-      );
+      // Simple markdown-like converter
+      function convertToHTML(text) {
+        return text
+          .replace(/^### (.*$)/gim, "<h3 class='text-xl font-semibold mt-4'>$1</h3>")
+          .replace(/^## (.*$)/gim, "<h2 class='text-2xl font-bold mt-6'>$1</h2>")
+          .replace(/^# (.*$)/gim, "<h1 class='text-3xl font-bold mt-6'>$1</h1>")
+          .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
+          .replace(/\*(.*?)\*/gim, "<em>$1</em>")
+          .replace(/`(.*?)`/gim, "<code class='bg-gray-100 px-1 rounded'>$1</code>")
+          .replace(/\n$/gim, "<br />");
+      }
 
-      updatePreview();
+      // Save handler (mock for now)
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert("✅ Blog post saved (mock mode). Integration with JSON file will be added next.");
+      });
     </script>
   </body>
 </html>
