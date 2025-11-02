@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calmiqs | Blog Post</title>
+
+    <!-- Tailwind (keep your existing config) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4FA49A",
+              accent: "#FFD580",
+              tech: "#5A67D8",
+            },
+            fontFamily: {
+              sans: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="/assets/css/style.css?v=12" />
+  </head>
+
+  <body class="font-sans bg-[#F9FAFB] text-gray-800">
+    <!-- 🌿 Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
+        <h1 class="text-2xl font-bold text-primary">
+          <a href="index.html">Calmiqs</a>
+        </h1>
+        <nav>
+          <ul class="flex gap-6 text-gray-700">
+            <li><a href="index.html" class="hover:text-primary">Home</a></li>
+            <li><a href="tools.html" class="hover:text-primary">Tools</a></li>
+            <li><a href="blog.html" class="hover:text-primary">Blog</a></li>
+            <li><a href="about.html" class="hover:text-primary">About</a></li>
+            <li><a href="contact.html" class="hover:text-primary">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- 🌈 Hero -->
+    <section id="post-hero" class="relative text-center py-24 px-6 text-white overflow-hidden">
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-primary via-accent to-tech animate-gradient bg-[length:400%_400%]"
+      ></div>
+      <div class="relative z-10">
+        <h2 id="post-title" class="text-4xl sm:text-5xl font-bold mb-6 drop-shadow-lg">
+          Loading...
+        </h2>
+        <p id="post-date" class="text-lg opacity-90"></p>
+      </div>
+    </section>
+
+    <!-- 📰 Post Content -->
+    <main class="max-w-3xl mx-auto py-12 px-6 leading-relaxed">
+      <img id="post-image" src="" alt="" class="w-full rounded-2xl shadow-lg mb-8" />
+      <div id="post-content" class="space-y-6 text-lg"></div>
+    </main>
+
+    <!-- 🔁 Post Navigation -->
+    <section class="max-w-3xl mx-auto px-6 pb-16 flex justify-between text-primary">
+      <a id="prev-post" href="#" class="hover:underline">← Previous Post</a>
+      <a id="next-post" href="#" class="hover:underline">Next Post →</a>
+    </section>
+
+    <!-- 🌿 Footer -->
+    <footer class="bg-white border-t mt-12">
+      <div class="max-w-6xl mx-auto text-center py-6 text-gray-500 text-sm">
+        © 2025 Calmiqs. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- 🧠 Dynamic Loader -->
+    <script>
+      // Example post data (will later connect to JSON or CMS)
+      const blogPosts = {
+        "mindful-breathing": {
+          title: "The Art of Mindful Breathing",
+          date: "November 2, 2025",
+          image: "/assets/images/mindful-breathing.jpg",
+          content: `
+            <p>Mindful breathing helps restore calm and focus in moments of stress. It’s one of the most accessible wellness practices.</p>
+            <p>By aligning your breath with awareness, you can reduce anxiety, improve concentration, and reconnect with the present moment.</p>
+            <blockquote class="border-l-4 border-primary pl-4 italic text-gray-600">
+              "When you own your breath, nobody can steal your peace."
+            </blockquote>
+            <h3 class="text-2xl font-semibold mt-8 mb-4">Simple Practice</h3>
+            <p>1. Sit comfortably and close your eyes.<br>
+            2. Inhale deeply through your nose for 4 seconds.<br>
+            3. Hold your breath for 4 seconds.<br>
+            4. Exhale slowly for 4 seconds.<br>
+            5. Repeat for 2–3 minutes daily.</p>
+          `,
+          prev: "green-focus",
+          next: "eco-habits",
+        },
+      };
+
+      // Get post key from URL (e.g. ?post=mindful-breathing)
+      const params = new URLSearchParams(window.location.search);
+      const postKey = params.get("post");
+
+      const post = blogPosts[postKey] || Object.values(blogPosts)[0];
+
+      // Inject data
+      document.getElementById("post-title").textContent = post.title;
+      document.getElementById("post-date").textContent = post.date;
+      document.getElementById("post-image").src = post.image;
+      document.getElementById("post-image").alt = post.title;
+      document.getElementById("post-content").innerHTML = post.content;
+
+      // Post nav
+      document.getElementById("prev-post").href = `post-template.html?post=${post.prev}`;
+      document.getElementById("next-post").href = `post-template.html?post=${post.next}`;
+    </script>
+  </body>
+</html>
