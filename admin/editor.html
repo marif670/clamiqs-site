@@ -229,11 +229,17 @@
         };
 
         try {
-          const response = await fetch("/update-post.json", {
+          const response = await fetch("/update-posts", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + "GITHUB_TOKEN", // replace this line
+            },
             body: JSON.stringify(posts),
-          });
+          })
+            .then((res) => res.text())
+            .then((text) => alert(text))
+            .catch((err) => alert("⚠️ " + err.message));
 
           const result = await response.json();
 
