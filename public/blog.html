@@ -98,12 +98,11 @@
 
         async function loadPosts() {
           try {
-            const res = await fetch("/posts");
-            if (!res.ok) throw new Error("KV fetch failed");
-            return await res.json();
+            const response = await fetch("/assets/data/posts.json");
+            if (!response.ok) throw new Error("No JSON");
+            return await response.json();
           } catch {
-            console.warn("Falling back to embedded posts");
-            return embeddedPosts || {};
+            return embeddedPosts; // fallback
           }
         }
 
