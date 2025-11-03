@@ -1,9 +1,8 @@
 name = "calmiqs-site"
 compatibility_date = "2024-11-01"
 
-# ✅ This tells Pages where your static assets are
+# ✅ This tells Cloudflare where your static files are
 pages_build_output_dir = "public"
 
-# ✅ This tells Pages where to look for Functions
-[pages]
-functions = "functions"
+# ✅ Declare the functions folder
+functions = "./functions"
