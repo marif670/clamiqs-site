@@ -50,25 +50,27 @@
       <h1 class="text-4xl font-bold text-primary mb-6 text-center">🪶 Calmiqs Blog Editor</h1>
 
       <!-- File Controls -->
-      <div class="flex flex-wrap gap-3 justify-between items-center mb-4">
+      <div class="flex justify-between items-center mb-4">
         <button
           id="loadBtn"
           class="bg-accent text-gray-800 px-4 py-2 rounded-lg shadow hover:bg-yellow-400 transition"
         >
           Load Posts
         </button>
-        <button
-          id="saveBtn"
-          class="bg-primary text-white px-4 py-2 rounded-lg shadow hover:bg-tech transition"
-        >
-          Save Post
-        </button>
-        <button
-          id="deleteBtn"
-          class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition"
-        >
-          Delete Post
-        </button>
+        <div class="flex gap-2">
+          <button
+            id="saveBtn"
+            class="bg-primary text-white px-4 py-2 rounded-lg shadow hover:bg-tech transition"
+          >
+            Save Post
+          </button>
+          <button
+            id="deleteBtn"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition"
+          >
+            Delete Post
+          </button>
+        </div>
       </div>
 
       <!-- Posts Dropdown -->
@@ -135,7 +137,7 @@
         </div>
       </div>
 
-      <!-- Toggle Preview -->
+      <!-- Toggle Button -->
       <button
         onclick="document.getElementById('previewContainer').classList.toggle('hidden')"
         class="mt-6 bg-primary text-white px-4 py-2 rounded-lg hover:bg-tech transition"
@@ -151,8 +153,9 @@
     </section>
 
     <script>
+      // === Configuration ===
       const PASSWORD = "calmiqs2025";
-      const KV_URL = "/posts";
+      const KV_URL = "/posts"; // KV function endpoint
       let posts = {};
 
       const authSection = document.getElementById("authSection");
@@ -163,7 +166,7 @@
       const saveBtn = document.getElementById("saveBtn");
       const deleteBtn = document.getElementById("deleteBtn");
 
-      // === Login ===
+      // === Login Logic ===
       loginBtn.addEventListener("click", () => {
         if (passwordInput.value.trim() === PASSWORD) {
           sessionStorage.setItem("calmiqsAuth", "true");
@@ -179,11 +182,11 @@
         loadPosts();
       }
 
-      // === Load posts from KV ===
+      // === KV Integration ===
       async function loadPosts() {
         try {
           const res = await fetch(KV_URL);
-          if (!res.ok) throw new Error("KV fetch failed");
+          if (!res.ok) throw new Error("Could not load posts from KV");
           posts = await res.json();
           populateSelect();
         } catch (err) {
@@ -217,11 +220,10 @@
         updatePreview();
       }
 
-      // === Save post to KV ===
-      saveBtn.addEventListener("click", async () => {
+      // === Save Post ===
+      async function savePost() {
         const key = document.getElementById("key").value.trim();
         if (!key) return alert("Please provide a key (slug).");
-
         const data = ["title", "date", "image", "excerpt", "content"].reduce((obj, id) => {
           obj[id] = document.getElementById(id).value.trim();
           return obj;
@@ -237,16 +239,18 @@
           if (result.success) {
             alert("✅ Post saved successfully!");
             loadPosts();
-          } else alert("⚠️ Error saving post: " + (result.error || "Unknown error"));
+          } else {
+            alert("⚠️ Error saving post: " + (result.error || "Unknown error"));
+          }
         } catch (err) {
           console.error(err);
           alert("❌ Failed to save post.");
         }
-      });
+      }
 
-      // === Delete post from KV ===
-      deleteBtn.addEventListener("click", async () => {
-        const key = document.getElementById("key").value.trim();
+      // === Delete Post ===
+      async function deletePost() {
+        const key = postSelect.value;
         if (!key) return alert("Select a post to delete");
         if (!confirm(`Are you sure you want to delete '${key}'?`)) return;
 
@@ -262,7 +266,7 @@
           console.error(err);
           alert("❌ Failed to delete post.");
         }
-      });
+      }
 
       // === Live Preview ===
       const titleInput = document.getElementById("title");
@@ -289,7 +293,10 @@
       );
       updatePreview();
 
+      // === Event Listeners ===
       document.getElementById("loadBtn").addEventListener("click", loadPosts);
+      saveBtn.addEventListener("click", savePost);
+      deleteBtn.addEventListener("click", deletePost);
     </script>
   </body>
 </html>
