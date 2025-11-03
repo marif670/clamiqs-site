@@ -209,7 +209,7 @@
         const post = posts[key];
         // Set the slug from the dropdown key
         document.getElementById("key").value = key;
-        ["key", "title", "date", "image", "excerpt", "content"].forEach(
+        ["title", "date", "image", "excerpt", "content"].forEach(
           (id) => (document.getElementById(id).value = post[id] || "")
         );
         updatePreview();
@@ -217,7 +217,7 @@
 
       function clearForm() {
         document.getElementById("key").value = "";
-        ["key", "title", "date", "image", "excerpt", "content"].forEach(
+        ["title", "date", "image", "excerpt", "content"].forEach(
           (id) => (document.getElementById(id).value = "")
         );
         updatePreview();
