@@ -1,50 +1,53 @@
+// functions/api/posts.js
 export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   const method = request.method;
+  const key = url.searchParams.get("key");
 
-  // Helper to return JSON response
-  const json = (data, status = 200) =>
-    new Response(JSON.stringify(data), {
-      status,
+  // ✅ GET all posts
+  if (method === "GET" && !key) {
+    const list = await env.CALMIQS_POSTS.list();
+    const all = {};
+    for (const item of list.keys) {
+      const value = await env.CALMIQS_POSTS.get(item.name, { type: "json" });
+      all[item.name] = value;
+    }
+    return new Response(JSON.stringify(all), {
       headers: { "Content-Type": "application/json" },
     });
-
-  // GET — fetch all or one post
-  if (method === "GET") {
-    const key = url.searchParams.get("key");
-    if (key) {
-      const post = await env.CALMIQS_POSTS.get(key, { type: "json" });
-      return post ? json(post) : json({ error: "Not found" }, 404);
-    }
-    // Return all posts
-    const keys = await env.CALMIQS_POSTS.list();
-    const posts = {};
-    for (const { name } of keys.keys) {
-      posts[name] = await env.CALMIQS_POSTS.get(name, { type: "json" });
-    }
-    return json(posts);
   }
 
-  // POST — add or update a post
+  // ✅ GET single post
+  if (method === "GET" && key) {
+    const post = await env.CALMIQS_POSTS.get(key, { type: "json" });
+    if (!post)
+      return new Response(JSON.stringify({ error: "Not found" }), {
+        status: 404,
+      });
+    return new Response(JSON.stringify(post), {
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  // ✅ CREATE / UPDATE post
   if (method === "POST") {
-    try {
-      const body = await request.json();
-      if (!body.key || !body.data) return json({ error: "Invalid data" }, 400);
-      await env.CALMIQS_POSTS.put(body.key, JSON.stringify(body.data));
-      return json({ success: true });
-    } catch (e) {
-      return json({ error: e.message }, 500);
-    }
+    const body = await request.json();
+    await env.CALMIQS_POSTS.put(body.key, JSON.stringify(body.data));
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  // DELETE — remove a post
-  if (method === "DELETE") {
-    const key = url.searchParams.get("key");
-    if (!key) return json({ error: "Missing key" }, 400);
+  // ✅ DELETE post
+  if (method === "DELETE" && key) {
     await env.CALMIQS_POSTS.delete(key);
-    return json({ success: true });
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  return json({ error: "Method not allowed" }, 405);
+  return new Response(JSON.stringify({ error: "Invalid method" }), {
+    status: 405,
+  });
 }
