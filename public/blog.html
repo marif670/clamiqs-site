@@ -22,7 +22,7 @@
       };
     </script>
 
-    <link rel="stylesheet" href="/assets/css/style.css?v=12" />
+    <link rel="stylesheet" href="/public/assets/css/style.css?v=12" />
   </head>
   <body class="font-sans bg-[#F9FAFB] text-gray-800">
     <!-- Header -->
@@ -98,7 +98,7 @@
 
         async function loadPosts() {
           try {
-            const response = await fetch("/assets/data/posts.json");
+            const response = await fetch("/public/assets/data/posts.json");
             if (!response.ok) throw new Error("No JSON");
             return await response.json();
           } catch {
