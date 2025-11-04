@@ -116,6 +116,11 @@
             placeholder="https://..."
             class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
           />
+          <!-- NEW: Image Alt Text -->
+          <label class="block text-sm font-medium mb-1">Image Alt Text</label>
+          <input id="imageAlt" type="text" placeholder="Describe the image (for accessibility)"
+          class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2
+          focus:ring-primary"
         </div>
 
         <div>
@@ -208,6 +213,7 @@
         if (!key) return clearForm();
         const post = posts[key];
         // Set the slug from the dropdown key
+        document.getElementById("imageAlt").value = post.imageAlt || "";
         document.getElementById("key").value = key;
         ["title", "date", "image", "excerpt", "content"].forEach(
           (id) => (document.getElementById(id).value = post[id] || "")
@@ -217,7 +223,7 @@
 
       function clearForm() {
         document.getElementById("key").value = "";
-        ["title", "date", "image", "excerpt", "content"].forEach(
+        ["title", "date", "image", "imageAlt", "excerpt", "content"].forEach(
           (id) => (document.getElementById(id).value = "")
         );
         updatePreview();
@@ -229,6 +235,7 @@
         if (!key) return alert("Please provide a key (slug).");
         const data = ["title", "date", "image", "excerpt", "content"].reduce((obj, id) => {
           obj[id] = document.getElementById(id).value.trim();
+          obj["imageAlt"] = document.getElementById("imageAlt").value.trim();
           return obj;
         }, {});
 
