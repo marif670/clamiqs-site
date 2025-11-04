@@ -1,48 +1,22 @@
-export const onRequestPost = async ({ request, env }) => {
-  try {
-    const formData = await request.formData();
-    const file = formData.get("file");
+export async function POST(request) {
+  const formData = await request.formData();
+  const file = formData.get("file");
 
-    if (!file) {
-      return new Response(
-        JSON.stringify({ success: false, error: "No file uploaded" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+  if (!file)
+    return new Response(
+      JSON.stringify({ success: false, error: "No file provided" }),
+      { status: 400 }
+    );
+
+  const id = Date.now().toString();
+  await CALMIQS_IMAGES.put(id, await file.arrayBuffer(), {
+    metadata: { name: file.name, type: file.type },
+  });
+
+  return new Response(
+    JSON.stringify({ success: true, id, url: `/api/images/${id}` }),
+    {
+      headers: { "Content-Type": "application/json" },
     }
-
-    const id = Date.now().toString();
-    const mime = file.type;
-    const arrayBuffer = await file.arrayBuffer();
-
-    await env.CALMIQS_IMAGES.put(id, arrayBuffer, {
-      metadata: { mime, originalName: file.name },
-    });
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        id,
-        url: `/api/images/${id}`,
-        meta: {
-          id,
-          mime,
-          originalName: file.name,
-          size: arrayBuffer.byteLength,
-          uploadedAt: new Date().toISOString(),
-        },
-      }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
-  } catch (err) {
-    return new Response(
-      JSON.stringify({ success: false, error: err.message }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  }
-};
+  );
+}
