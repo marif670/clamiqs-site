@@ -1,56 +1,40 @@
-export const onRequestPost = async ({ request, env }) => {
+import { v4 as uuidv4 } from "uuid";
+
+export async function onRequestPost({ request, env }) {
   try {
-    // Make sure it's a multipart/form-data request
     const formData = await request.formData();
-    const file = formData.get("file"); // file input
-    const alt = formData.get("alt") || ""; // optional alt text
-    const postSlug = formData.get("postSlug") || "";
+    const file = formData.get("file");
+    const alt = formData.get("alt") || "";
 
-    if (!file || !file.arrayBuffer) {
+    if (!file)
       return new Response(
-        JSON.stringify({ success: false, error: "No file uploaded" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
+        JSON.stringify({ success: false, error: "No file provided" }),
+        { status: 400 }
       );
-    }
 
-    // Generate a unique ID
-    const id = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    const id = Date.now() + "-" + Math.floor(Math.random() * 10000);
+    const key = id;
+    const mime = file.type || "application/octet-stream";
+    const arrayBuffer = await file.arrayBuffer();
 
-    // Convert file to ArrayBuffer and store in KV
-    const buffer = await file.arrayBuffer();
-    const fileName = file.name || "image.jpg";
-    const mimeType = file.type || "application/octet-stream";
+    await env.CALMIQS_IMAGES.put(key, arrayBuffer, {
+      metadata: {
+        alt,
+        originalName: file.name,
+        mime,
+        uploadedAt: new Date().toISOString(),
+      },
+    });
 
-    const meta = {
-      id,
-      mime: mimeType,
-      originalName: fileName,
-      alt: alt || fileName,
-      postSlug,
-      size: buffer.byteLength,
-      uploadedAt: new Date().toISOString(),
-      url: `/images/${id}`,
-    };
+    const url = `/images/${key}`;
 
-    // Store the file itself
-    await env.CALMIQS_IMAGES.put(id, buffer, { metadata: meta });
-
-    // Return JSON to editor
-    return new Response(JSON.stringify({ success: true, ...meta }), {
-      status: 200,
+    return new Response(JSON.stringify({ success: true, id: key, url, alt }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("Upload failed:", err);
     return new Response(
-      JSON.stringify({ success: false, error: "Upload failed" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+      JSON.stringify({ success: false, error: err.message }),
+      { headers: { "Content-Type": "application/json" }, status: 500 }
     );
   }
-};
+}
