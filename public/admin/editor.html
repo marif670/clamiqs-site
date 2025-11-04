@@ -296,13 +296,14 @@
         const title = titleInput.value || "Untitled Post";
         const date = dateInput.value || "No date set";
         const image = imageInput.value || "https://via.placeholder.com/800x400?text=Preview";
-        const imageAlt = imageAltInput.value || "https://via.placeholder.com/800x400?text=Preview";
+        const imageAlt = imageAltInput.value || "Preview image";
         const content = contentInput.value || "<p>Start typing your article...</p>";
         preview.innerHTML = `
-          <img src="${image}" alt="${title}" class="rounded-xl mb-4 shadow-md w-full max-h-96 object-cover" />
+          <img src="${image}" alt="${imageAlt}" class="rounded-xl mb-4 shadow-md w-full max-h-96 object-cover" />
           <h3 class="text-3xl font-bold mb-2 text-primary">${title}</h3>
           <p class="text-gray-500 mb-6">${date}</p>
           <div class="text-gray-800 leading-relaxed">${content}</div>
+          <p class="mt-4 text-sm text-gray-500 italic">Alt text: ${imageAlt}</p>
         `;
       }
 
