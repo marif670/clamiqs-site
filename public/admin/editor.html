@@ -125,18 +125,12 @@
             class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
           />
 
-          <!-- NEW: Upload Image -->
+          <!-- ✅ File Upload -->
           <label class="block text-sm font-medium mb-1">Upload Image</label>
-          <input
-            type="file"
-            id="imageFile"
-            accept="image/*"
-            class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+          <input id="uploadFile" type="file" accept="image/*" class="mb-3" />
           <button
-            type="button"
-            id="uploadImageBtn"
-            class="bg-tech text-white px-4 py-2 rounded-lg hover:bg-primary transition mb-3"
+            id="uploadBtn"
+            class="bg-primary text-white px-4 py-2 rounded-lg mb-4 hover:bg-tech transition"
           >
             Upload Image
           </button>
@@ -187,8 +181,6 @@
     <script>
       const PASSWORD = "calmiqs2025";
       const KV_URL = "/posts";
-      const IMAGE_UPLOAD_URL = "/api/images/upload"; // KV images endpoint
-
       let posts = {};
 
       const authSection = document.getElementById("authSection");
@@ -215,16 +207,16 @@
         loadPosts();
       }
 
-      // Load Posts
+      // KV Integration
       async function loadPosts() {
         try {
           const res = await fetch(KV_URL);
-          if (!res.ok) throw new Error("Could not load posts");
+          if (!res.ok) throw new Error("Could not load posts from KV");
           posts = await res.json();
           populateSelect();
         } catch (err) {
           console.error(err);
-          alert("❌ Could not load posts.");
+          alert("❌ Could not load posts from KV.");
         }
       }
 
@@ -276,7 +268,7 @@
           if (result.success) {
             alert("✅ Post saved successfully!");
             loadPosts();
-          } else alert("⚠️ Error saving post: " + (result.error || "Unknown"));
+          } else alert("⚠️ Error saving post: " + (result.error || "Unknown error"));
         } catch (err) {
           console.error(err);
           alert("❌ Failed to save post.");
@@ -296,14 +288,14 @@
             alert("🗑️ Post deleted.");
             clearForm();
             loadPosts();
-          } else alert("⚠️ Error deleting post: " + (result.error || "Unknown"));
+          } else alert("⚠️ Error deleting post: " + (result.error || "Unknown error"));
         } catch (err) {
           console.error(err);
           alert("❌ Failed to delete post.");
         }
       }
 
-      // Preview
+      // Live Preview
       const titleInput = document.getElementById("title");
       const dateInput = document.getElementById("date");
       const imageInput = document.getElementById("image");
@@ -332,6 +324,7 @@
         const contentBox = document.getElementById("content");
         const cursorPos = contentBox.selectionStart;
         const template = `\n<img src="https://via.placeholder.com/800x400" alt="Describe the image" class="my-4 rounded-lg shadow-md" />\n`;
+
         const currentText = contentBox.value;
         contentBox.value =
           currentText.slice(0, cursorPos) + template + currentText.slice(cursorPos);
@@ -339,28 +332,29 @@
         updatePreview();
       });
 
-      // === Upload Image ===
-      const uploadBtn = document.getElementById("uploadImageBtn");
+      // === File Upload Logic ===
+      const uploadBtn = document.getElementById("uploadBtn");
+      const uploadFile = document.getElementById("uploadFile");
+
       uploadBtn.addEventListener("click", async () => {
-        const fileInput = document.getElementById("imageFile");
-        if (!fileInput.files[0]) return alert("Select an image to upload.");
+        if (!uploadFile.files.length) return alert("Select a file first");
 
         const formData = new FormData();
-        formData.append("file", fileInput.files[0]);
+        formData.append("file", uploadFile.files[0]);
 
         try {
-          const res = await fetch(IMAGE_UPLOAD_URL, {
+          const res = await fetch("/api/images/upload", {
             method: "POST",
             body: formData,
           });
-          const result = await res.json();
-          if (result.success && result.meta.url) {
-            // Update image input and alt text automatically
-            imageInput.value = result.meta.url;
-            imageAltInput.value = result.meta.alt || "";
+          const data = await res.json();
+          if (data.success) {
+            alert("✅ Image uploaded! URL: " + data.url);
+            // Insert into content automatically
+            const contentBox = document.getElementById("content");
+            contentBox.value += `\n<img src="${data.url}" alt="${uploadFile.files[0].name}" class="my-4 rounded-lg shadow-md" />\n`;
             updatePreview();
-            alert("✅ Image uploaded successfully!");
-          } else throw new Error("Upload failed");
+          } else alert("❌ Failed to upload image: " + (data.error || "unknown"));
         } catch (err) {
           console.error(err);
           alert("❌ Failed to upload image.");
