@@ -115,6 +115,7 @@
             type="text"
             placeholder="https://..."
             class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
+            readonly
           />
 
           <label class="block text-sm font-medium mb-1">Image Alt Text</label>
@@ -125,12 +126,12 @@
             class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
           />
 
-          <!-- Image Upload -->
+          <!-- File Input -->
           <label class="block text-sm font-medium mb-1">Upload Image</label>
-          <input type="file" id="imageFile" accept="image/*" class="w-full mb-3" />
+          <input id="fileInput" type="file" accept="image/*" class="w-full mb-3" />
           <button
             id="uploadImageBtn"
-            class="bg-accent text-gray-800 px-4 py-2 rounded-lg hover:bg-yellow-400 transition w-full mb-3"
+            class="bg-accent text-gray-800 px-4 py-2 rounded-lg shadow hover:bg-yellow-400 transition mb-3"
           >
             Upload Image
           </button>
@@ -180,8 +181,8 @@
 
     <script>
       const PASSWORD = "calmiqs2025";
-      const KV_URL = "/posts"; // KV function endpoint
-      const IMAGE_UPLOAD_URL = "/images/upload"; // Correct upload path
+      const KV_URL = "/posts";
+      const IMAGE_UPLOAD_URL = "/images/upload";
 
       let posts = {};
 
@@ -192,10 +193,8 @@
       const postSelect = document.getElementById("postSelect");
       const saveBtn = document.getElementById("saveBtn");
       const deleteBtn = document.getElementById("deleteBtn");
-      const uploadImageBtn = document.getElementById("uploadImageBtn");
-      const imageFileInput = document.getElementById("imageFile");
 
-      // === Login Logic ===
+      // Login
       loginBtn.addEventListener("click", () => {
         if (passwordInput.value.trim() === PASSWORD) {
           sessionStorage.setItem("calmiqsAuth", "true");
@@ -211,11 +210,11 @@
         loadPosts();
       }
 
-      // === KV Integration ===
+      // Load posts
       async function loadPosts() {
         try {
           const res = await fetch(KV_URL);
-          if (!res.ok) throw new Error("Could not load posts from KV");
+          if (!res.ok) throw new Error("Could not load posts");
           posts = await res.json();
           populateSelect();
         } catch (err) {
@@ -251,17 +250,15 @@
         updatePreview();
       }
 
-      // === Save Post ===
+      // Save & Delete
       async function savePost() {
         const key = document.getElementById("key").value.trim();
-        if (!key) return alert("Please provide a key (slug).");
-
+        if (!key) return alert("Please provide a key.");
         const data = ["title", "date", "image", "excerpt", "content"].reduce((obj, id) => {
           obj[id] = document.getElementById(id).value.trim();
           return obj;
         }, {});
         data.imageAlt = document.getElementById("imageAlt").value.trim();
-
         try {
           const res = await fetch(KV_URL, {
             method: "POST",
@@ -269,25 +266,20 @@
             body: JSON.stringify({ key, data }),
           });
           const result = await res.json();
-
           if (result.success) {
             alert("✅ Post saved successfully!");
             loadPosts();
-          } else {
-            alert("⚠️ Error saving post: " + (result.error || "Unknown error"));
-          }
+          } else alert("⚠️ Error saving post: " + (result.error || "Unknown error"));
         } catch (err) {
           console.error(err);
           alert("❌ Failed to save post.");
         }
       }
 
-      // === Delete Post ===
       async function deletePost() {
         const key = postSelect.value;
         if (!key) return alert("Select a post to delete");
         if (!confirm(`Are you sure you want to delete '${key}'?`)) return;
-
         try {
           const res = await fetch(`${KV_URL}?key=${encodeURIComponent(key)}`, { method: "DELETE" });
           const result = await res.json();
@@ -302,34 +294,7 @@
         }
       }
 
-      // === Image Upload ===
-      uploadImageBtn.addEventListener("click", async function uploadImage(file, altText) {
-        const formData = new FormData();
-        formData.append("file", file);
-
-        try {
-          const res = await fetch("/api/images/upload", { method: "POST", body: formData });
-          const data = await res.json();
-
-          if (data.success) {
-            // Update editor fields BEFORE showing any alert
-            document.getElementById("image").value = data.url;
-            document.getElementById("imageAlt").value = altText || file.name;
-
-            updatePreview(); // immediately refresh live preview
-
-            // THEN show success notification
-            alert("✅ Image uploaded!");
-          } else {
-            alert("❌ Failed to upload image: " + (data.error || "Unknown error"));
-          }
-        } catch (err) {
-          console.error(err);
-          alert("❌ Failed to upload image.");
-        }
-      });
-
-      // === Live Preview ===
+      // Live Preview
       const titleInput = document.getElementById("title");
       const dateInput = document.getElementById("date");
       const imageInput = document.getElementById("image");
@@ -352,13 +317,17 @@
         `;
       }
 
-      // === Insert Inline Image Snippet ===
+      [titleInput, dateInput, imageInput, imageAltInput, contentInput].forEach((el) =>
+        el.addEventListener("input", updatePreview)
+      );
+      updatePreview();
+
+      // Insert Image Template
       const insertImageBtn = document.getElementById("insertImageBtn");
       insertImageBtn.addEventListener("click", () => {
         const contentBox = document.getElementById("content");
         const cursorPos = contentBox.selectionStart;
         const template = `\n<img src="https://via.placeholder.com/800x400" alt="Describe the image" class="my-4 rounded-lg shadow-md" />\n`;
-
         const currentText = contentBox.value;
         contentBox.value =
           currentText.slice(0, cursorPos) + template + currentText.slice(cursorPos);
@@ -366,10 +335,34 @@
         updatePreview();
       });
 
-      [titleInput, dateInput, imageInput, imageAltInput, contentInput].forEach((el) =>
-        el.addEventListener("input", updatePreview)
-      );
-      updatePreview();
+      // Upload Image
+      const uploadBtn = document.getElementById("uploadImageBtn");
+      const fileInput = document.getElementById("fileInput");
+
+      uploadBtn.addEventListener("click", async () => {
+        const file = fileInput.files[0];
+        if (!file) return alert("Select an image to upload");
+        const altText = document.getElementById("imageAlt").value || file.name;
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("alt", altText);
+        try {
+          const res = await fetch(IMAGE_UPLOAD_URL, { method: "POST", body: formData });
+          const data = await res.json();
+          if (data.success) {
+            alert("✅ Image uploaded successfully!");
+            imageInput.value = data.url;
+            imageAltInput.value = data.alt || file.name;
+            updatePreview();
+          } else {
+            console.error(data);
+            alert("❌ Failed to upload image: " + (data.error || "Unknown error"));
+          }
+        } catch (err) {
+          console.error(err);
+          alert("❌ Failed to upload image.");
+        }
+      });
 
       document.getElementById("loadBtn").addEventListener("click", loadPosts);
       saveBtn.addEventListener("click", savePost);
