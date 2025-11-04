@@ -303,28 +303,25 @@
       }
 
       // === Image Upload ===
-      uploadImageBtn.addEventListener("click", async () => {
-        const file = imageFileInput.files[0];
-        if (!file) return alert("Select an image to upload.");
-
+      uploadImageBtn.addEventListener("click", async function uploadImage(file, altText) {
         const formData = new FormData();
         formData.append("file", file);
 
         try {
-          const res = await fetch(IMAGE_UPLOAD_URL, {
-            method: "POST",
-            body: formData,
-          });
-          const result = await res.json();
+          const res = await fetch("/api/images/upload", { method: "POST", body: formData });
+          const data = await res.json();
 
-          if (result.success) {
+          if (data.success) {
+            // Update editor fields BEFORE showing any alert
+            document.getElementById("image").value = data.url;
+            document.getElementById("imageAlt").value = altText || file.name;
+
+            updatePreview(); // immediately refresh live preview
+
+            // THEN show success notification
             alert("✅ Image uploaded!");
-            document.getElementById("image").value = response.url;
-            document.getElementById("imageAlt").value =
-              altTextInput.value.trim() || "Descriptive alt text";
-            updatePreview();
           } else {
-            alert("❌ Failed to upload image: " + (result.error || "Unknown error"));
+            alert("❌ Failed to upload image: " + (data.error || "Unknown error"));
           }
         } catch (err) {
           console.error(err);
