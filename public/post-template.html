@@ -114,7 +114,7 @@
           <h1 class="text-4xl font-bold text-primary mb-4">${post.title}</h1>
           <p class="text-gray-500 mb-6">${post.date}</p>
           <img src="${post.image || "https://via.placeholder.com/800x400?text=No+Image"}" alt="${
-          post.title
+          post.imageAlt || post.title
         }" class="rounded-xl mb-8 shadow-lg mx-auto" />
           <div class="text-lg leading-relaxed text-left max-w-3xl mx-auto">${post.content}</div>
           <div class="mt-10 text-center">
