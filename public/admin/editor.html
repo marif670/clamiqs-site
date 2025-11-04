@@ -235,11 +235,14 @@
       async function savePost() {
         const key = document.getElementById("key").value.trim();
         if (!key) return alert("Please provide a key (slug).");
+
+        // Collect all fields including imageAlt properly
         const data = ["title", "date", "image", "excerpt", "content"].reduce((obj, id) => {
           obj[id] = document.getElementById(id).value.trim();
-          obj["imageAlt"] = document.getElementById("imageAlt").value.trim();
           return obj;
         }, {});
+
+        data.imageAlt = document.getElementById("imageAlt").value.trim(); // Add imageAlt once outside the loop
 
         try {
           const res = await fetch(KV_URL, {
@@ -248,6 +251,7 @@
             body: JSON.stringify({ key, data }),
           });
           const result = await res.json();
+
           if (result.success) {
             alert("✅ Post saved successfully!");
             loadPosts();
