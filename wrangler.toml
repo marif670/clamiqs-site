@@ -7,3 +7,7 @@ kv_namespaces = [
 ]
 
 pages_build_output_dir = "public"
+
+# For images (new one)
+wrangler kv:namespace create "CALMIQS_IMAGES"
+
