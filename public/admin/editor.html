@@ -24,11 +24,8 @@
       };
     </script>
 
-    <!-- Main site CSS -->
-    <link rel="stylesheet" href="/assets/css/style.css?v=12" />
-
-    <!-- Editor-specific CSS -->
-    <link rel="stylesheet" href="editor.css" />
+    <!-- Custom Editor CSS -->
+    <link rel="stylesheet" href="/assets/css/editor.css?v=1" />
   </head>
   <body class="bg-[#F9FAFB] text-gray-800 font-sans min-h-screen">
     <!-- 🔒 Login Section -->
@@ -85,17 +82,6 @@
           id="postSelect"
           class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
         ></select>
-      </div>
-
-      <!-- Toolbar -->
-      <div class="mb-3">
-        <button type="button" class="toolbar-btn" data-action="b"><strong>B</strong></button>
-        <button type="button" class="toolbar-btn" data-action="i"><em>I</em></button>
-        <button type="button" class="toolbar-btn" data-action="h2">H2</button>
-        <button type="button" class="toolbar-btn" data-action="h3">H3</button>
-        <button type="button" class="toolbar-btn" data-action="ul">UL</button>
-        <button type="button" class="toolbar-btn" data-action="ol">OL</button>
-        <button type="button" class="toolbar-btn" data-action="link">Link</button>
       </div>
 
       <!-- Editor Form -->
@@ -161,39 +147,54 @@
 
         <!-- Content & Inline Images -->
         <div>
+          <!-- Formatting Toolbar -->
+          <div class="mb-2">
+            <button class="format-btn" data-command="bold"><strong>B</strong></button>
+            <button class="format-btn" data-command="italic"><em>I</em></button>
+            <button class="format-btn" data-command="formatBlock" data-value="h2">H2</button>
+            <button class="format-btn" data-command="formatBlock" data-value="h3">H3</button>
+            <button class="format-btn" data-command="insertUnorderedList">UL</button>
+            <button class="format-btn" data-command="insertOrderedList">OL</button>
+            <button class="format-btn" data-command="createLink">Link</button>
+          </div>
+
           <label class="block text-sm font-medium mb-1">Content (HTML allowed)</label>
-          <textarea
+          <div
             id="content"
-            rows="10"
-            placeholder="<p>Your article here...</p>"
-            class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary mb-3"
-          ></textarea>
+            contenteditable="true"
+            class="w-full border rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-primary min-h-[300px] bg-white"
+          ></div>
 
           <input type="file" id="inlineImageFile" class="mb-2" />
-          <label class="block text-sm font-medium mb-1">Alt Text</label>
-          <input
-            type="text"
-            id="inlineImageAlt"
-            placeholder="Describe inline image"
-            class="w-full border rounded-lg px-4 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-
-          <label class="block text-sm font-medium mb-1">Alignment</label>
-          <select
-            id="inlineImageAlign"
-            class="w-full border rounded-lg px-4 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <option value="left">Left</option>
-            <option value="center" selected>Center</option>
-            <option value="right">Right</option>
-          </select>
-
           <button
             id="insertInlineBtn"
             class="bg-accent text-gray-800 px-3 py-1 rounded hover:bg-yellow-400 transition mb-3"
           >
             ➕ Upload & Insert Inline Image
           </button>
+
+          <!-- Inline Image Formatting -->
+          <div id="inlineControls" class="mb-3 hidden">
+            <label>
+              Width(px):
+              <input type="number" id="inlineWidth" value="800" />
+            </label>
+            <label>
+              Alignment:
+              <select id="inlineAlign">
+                <option value="none">None</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+                <option value="center">Center</option>
+              </select>
+            </label>
+            <button
+              id="applyInlineFormat"
+              class="bg-primary text-white px-2 py-1 rounded hover:bg-tech"
+            >
+              Apply
+            </button>
+          </div>
         </div>
       </div>
 
@@ -205,6 +206,9 @@
         Toggle Preview
       </button>
 
+      <!-- SEO / Accessibility Warnings -->
+      <div id="seoWarnings" class="text-sm text-red-600 mt-2"></div>
+
       <!-- Live Preview -->
       <h2 class="text-2xl font-semibold mt-8 mb-4">🪶 Live Preview</h2>
       <div id="previewContainer" class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
@@ -212,7 +216,7 @@
       </div>
     </section>
 
-    <!-- Editor JS -->
-    <script src="editor.js"></script>
+    <!-- JS -->
+    <script src="/assets/js/editor.js?v=1"></script>
   </body>
 </html>
