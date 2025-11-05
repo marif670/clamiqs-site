@@ -5,7 +5,7 @@ const IMAGE_UPLOAD_URL = "/images/upload";
 
 let posts = {};
 
-// === ELEMENTS ===
+// Elements
 const authSection = document.getElementById("authSection");
 const editorSection = document.getElementById("editorSection");
 const passwordInput = document.getElementById("passwordInput");
@@ -13,18 +13,8 @@ const loginBtn = document.getElementById("loginBtn");
 const postSelect = document.getElementById("postSelect");
 const saveBtn = document.getElementById("saveBtn");
 const deleteBtn = document.getElementById("deleteBtn");
-
-const titleInput = document.getElementById("title");
-const dateInput = document.getElementById("date");
-const imageInput = document.getElementById("image");
-const imageAltInput = document.getElementById("imageAlt");
 const contentInput = document.getElementById("content");
 const preview = document.getElementById("previewContent");
-
-// Inline image controls
-const inlineFileInput = document.getElementById("inlineImageFile");
-const inlineAlignSelect = document.getElementById("inlineImageAlign");
-const inlineAltInput = document.getElementById("inlineImageAlt");
 
 // === LOGIN ===
 loginBtn.addEventListener("click", () => {
@@ -86,11 +76,13 @@ function clearForm() {
 async function savePost() {
   const key = document.getElementById("key").value.trim();
   if (!key) return alert("Provide a key (slug)");
+
   const data = ["title", "date", "image", "excerpt", "content"].reduce((obj, id) => {
     obj[id] = document.getElementById(id).value.trim();
     return obj;
   }, {});
   data.imageAlt = document.getElementById("imageAlt").value.trim();
+
   try {
     const res = await fetch(KV_URL, {
       method: "POST",
@@ -154,24 +146,26 @@ document.getElementById("uploadHeroBtn").addEventListener("click", async () => {
 
 // === INLINE IMAGE UPLOAD ===
 document.getElementById("insertInlineBtn").addEventListener("click", async () => {
-  if (!inlineFileInput.files[0]) return alert("Select a file");
-  const align = inlineAlignSelect.value;
-  const altText = inlineAltInput.value || inlineFileInput.files[0].name;
+  const fileInput = document.getElementById("inlineImageFile");
+  const altText = document.getElementById("inlineImageAlt").value.trim();
+  const alignment = document.getElementById("inlineImageAlign").value || "center";
+
+  if (!fileInput.files[0]) return alert("Select a file");
 
   const formData = new FormData();
-  formData.append("file", inlineFileInput.files[0]);
-  formData.append("alt", altText);
-  formData.append("alignment", align);
+  formData.append("file", fileInput.files[0]);
+  formData.append("alt", altText || fileInput.files[0].name);
+  formData.append("alignment", alignment);
 
   try {
     const res = await fetch(IMAGE_UPLOAD_URL, { method: "POST", body: formData });
     const result = await res.json();
     if (result.success) {
-      const cursorPos = contentInput.selectionStart;
-      const template = `<img src="${result.url}" alt="${result.meta.alt}" class="my-4 rounded-lg shadow-md float-${align}" />`;
-      const currentText = contentInput.value;
-      contentInput.value =
-        currentText.slice(0, cursorPos) + template + currentText.slice(cursorPos);
+      const contentBox = document.getElementById("content");
+      const cursorPos = contentBox.selectionStart;
+      const template = `<img src="${result.url}" alt="${result.meta.alt}" class="my-4 rounded-lg shadow-md float-${alignment}" />`;
+      const currentText = contentBox.value;
+      contentBox.value = currentText.slice(0, cursorPos) + template + currentText.slice(cursorPos);
       updatePreview();
       alert("✅ Inline image inserted");
     } else alert("❌ Failed to insert inline image: " + (result.error || "Unknown error"));
@@ -181,13 +175,70 @@ document.getElementById("insertInlineBtn").addEventListener("click", async () =>
   }
 });
 
+// === TOOLBAR ACTIONS ===
+document.querySelectorAll(".toolbar-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const action = btn.dataset.action;
+    let selected = window.getSelection().toString();
+
+    if (!selected && action !== "link") return alert("Select text first");
+
+    const textarea = contentInput;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    let newText = selected;
+
+    switch (action) {
+      case "b":
+        newText = `<strong>${selected}</strong>`;
+        break;
+      case "i":
+        newText = `<em>${selected}</em>`;
+        break;
+      case "h2":
+        newText = `<h2>${selected}</h2>`;
+        break;
+      case "h3":
+        newText = `<h3>${selected}</h3>`;
+        break;
+      case "ul":
+        newText = `<ul>\n<li>${selected.split("\n").join("</li>\n<li>")}</li>\n</ul>`;
+        break;
+      case "ol":
+        newText = `<ol>\n<li>${selected.split("\n").join("</li>\n<li>")}</li>\n</ol>`;
+        break;
+      case "link":
+        const url = prompt("Enter URL");
+        if (!url) return;
+        newText = `<a href="${url}" target="_blank">${selected}</a>`;
+        break;
+    }
+
+    textarea.setRangeText(newText, start, end, "end");
+    updatePreview();
+  });
+});
+
 // === LIVE PREVIEW ===
 function updatePreview() {
-  const title = titleInput.value || "Untitled Post";
-  const date = dateInput.value || "No date set";
-  const image = imageInput.value || "https://via.placeholder.com/800x400?text=Preview";
-  const imageAlt = imageAltInput.value || "Preview image";
-  const content = contentInput.value || "<p>Start typing...</p>";
+  const title = document.getElementById("title").value || "Untitled Post";
+  const date = document.getElementById("date").value || "No date set";
+  const image =
+    document.getElementById("image").value || "https://via.placeholder.com/800x400?text=Preview";
+  const imageAlt = document.getElementById("imageAlt").value || "Preview image";
+  let content = contentInput.value || "";
+
+  // Wrap plain text lines in <p> if not already a block
+  content = content
+    .split(/\n+/)
+    .map((line) => {
+      line = line.trim();
+      if (!line) return "";
+      if (/^<(h2|h3|ul|ol|li|p|img|pre|blockquote)/i.test(line)) return line;
+      return `<p>${line}</p>`;
+    })
+    .join("\n");
+
   preview.innerHTML = `
     <img src="${image}" alt="${imageAlt}" class="rounded-xl mb-4 shadow-md w-full max-h-96 object-cover" />
     <h3 class="text-3xl font-bold mb-2 text-primary">${title}</h3>
@@ -196,52 +247,14 @@ function updatePreview() {
   `;
 }
 
-[titleInput, dateInput, imageInput, imageAltInput, contentInput].forEach((el) =>
-  el.addEventListener("input", updatePreview)
+// Auto-update preview on input
+["title", "date", "image", "imageAlt", "content"].forEach((id) =>
+  document.getElementById(id).addEventListener("input", updatePreview)
 );
+
 updatePreview();
 
-// === TOOLBAR BUTTONS ===
-document.querySelectorAll(".toolbar-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const action = btn.dataset.action;
-    let start = contentInput.selectionStart;
-    let end = contentInput.selectionEnd;
-    let selectedText = contentInput.value.substring(start, end);
-    let insertText = "";
-
-    switch (action) {
-      case "b":
-        insertText = `<strong>${selectedText}</strong>`;
-        break;
-      case "i":
-        insertText = `<em>${selectedText}</em>`;
-        break;
-      case "h2":
-        insertText = `<h2>${selectedText}</h2>`;
-        break;
-      case "h3":
-        insertText = `<h3>${selectedText}</h3>`;
-        break;
-      case "ul":
-        insertText = `<ul><li>${selectedText}</li></ul>`;
-        break;
-      case "ol":
-        insertText = `<ol><li>${selectedText}</li></ol>`;
-        break;
-      case "link":
-        const url = prompt("Enter URL:");
-        if (url) insertText = `<a href="${url}" target="_blank">${selectedText || url}</a>`;
-        break;
-    }
-
-    contentInput.value =
-      contentInput.value.slice(0, start) + insertText + contentInput.value.slice(end);
-    updatePreview();
-  });
-});
-
-// === BUTTON EVENTS ===
+// Button events
 document.getElementById("loadBtn").addEventListener("click", loadPosts);
 saveBtn.addEventListener("click", savePost);
 deleteBtn.addEventListener("click", deletePost);
