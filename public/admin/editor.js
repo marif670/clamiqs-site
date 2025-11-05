@@ -5,6 +5,7 @@ const IMAGE_UPLOAD_URL = "/images/upload";
 
 let posts = {};
 
+// === ELEMENTS ===
 const authSection = document.getElementById("authSection");
 const editorSection = document.getElementById("editorSection");
 const passwordInput = document.getElementById("passwordInput");
@@ -12,7 +13,18 @@ const loginBtn = document.getElementById("loginBtn");
 const postSelect = document.getElementById("postSelect");
 const saveBtn = document.getElementById("saveBtn");
 const deleteBtn = document.getElementById("deleteBtn");
-const editorDiv = document.getElementById("editor");
+
+const titleInput = document.getElementById("title");
+const dateInput = document.getElementById("date");
+const imageInput = document.getElementById("image");
+const imageAltInput = document.getElementById("imageAlt");
+const contentInput = document.getElementById("content");
+const preview = document.getElementById("previewContent");
+
+// Inline image controls
+const inlineFileInput = document.getElementById("inlineImageFile");
+const inlineAlignSelect = document.getElementById("inlineImageAlign");
+const inlineAltInput = document.getElementById("inlineImageAlt");
 
 // === LOGIN ===
 loginBtn.addEventListener("click", () => {
@@ -56,19 +68,17 @@ postSelect.addEventListener("change", () => {
   if (!key) return clearForm();
   const post = posts[key];
   document.getElementById("key").value = key;
-  ["title", "date", "image", "imageAlt", "excerpt"].forEach((id) => {
+  ["title", "date", "image", "imageAlt", "excerpt", "content"].forEach((id) => {
     document.getElementById(id).value = post[id] || "";
   });
-  editorDiv.innerHTML = post.content || "";
   updatePreview();
 });
 
 function clearForm() {
   document.getElementById("key").value = "";
-  ["title", "date", "image", "imageAlt", "excerpt"].forEach((id) => {
+  ["title", "date", "image", "imageAlt", "excerpt", "content"].forEach((id) => {
     document.getElementById(id).value = "";
   });
-  editorDiv.innerHTML = "";
   updatePreview();
 }
 
@@ -76,12 +86,11 @@ function clearForm() {
 async function savePost() {
   const key = document.getElementById("key").value.trim();
   if (!key) return alert("Provide a key (slug)");
-  const data = ["title", "date", "image", "excerpt"].reduce((obj, id) => {
+  const data = ["title", "date", "image", "excerpt", "content"].reduce((obj, id) => {
     obj[id] = document.getElementById(id).value.trim();
     return obj;
   }, {});
   data.imageAlt = document.getElementById("imageAlt").value.trim();
-  data.content = editorDiv.innerHTML;
   try {
     const res = await fetch(KV_URL, {
       method: "POST",
@@ -144,25 +153,25 @@ document.getElementById("uploadHeroBtn").addEventListener("click", async () => {
 });
 
 // === INLINE IMAGE UPLOAD ===
-document.getElementById("insertImageBtn").addEventListener("click", async () => {
-  const fileInput = document.getElementById("inlineImageFile");
-  if (!fileInput.files[0]) return alert("Select a file");
-
-  const altText =
-    prompt("Enter alt text for this image:", fileInput.files[0].name) || fileInput.files[0].name;
-  const alignment = document.getElementById("inlineImageAlign").value || "mx-auto";
+document.getElementById("insertInlineBtn").addEventListener("click", async () => {
+  if (!inlineFileInput.files[0]) return alert("Select a file");
+  const align = inlineAlignSelect.value;
+  const altText = inlineAltInput.value || inlineFileInput.files[0].name;
 
   const formData = new FormData();
-  formData.append("file", fileInput.files[0]);
+  formData.append("file", inlineFileInput.files[0]);
   formData.append("alt", altText);
-  formData.append("alignment", alignment);
+  formData.append("alignment", align);
 
   try {
     const res = await fetch(IMAGE_UPLOAD_URL, { method: "POST", body: formData });
     const result = await res.json();
     if (result.success) {
-      const imgHTML = `<img src="${result.url}" alt="${result.meta.alt}" class="my-4 rounded-lg shadow-md ${alignment}" />`;
-      insertAtCursor(editorDiv, imgHTML);
+      const cursorPos = contentInput.selectionStart;
+      const template = `<img src="${result.url}" alt="${result.meta.alt}" class="my-4 rounded-lg shadow-md float-${align}" />`;
+      const currentText = contentInput.value;
+      contentInput.value =
+        currentText.slice(0, cursorPos) + template + currentText.slice(cursorPos);
       updatePreview();
       alert("✅ Inline image inserted");
     } else alert("❌ Failed to insert inline image: " + (result.error || "Unknown error"));
@@ -172,30 +181,13 @@ document.getElementById("insertImageBtn").addEventListener("click", async () => 
   }
 });
 
-function insertAtCursor(editor, html) {
-  editor.focus();
-  const sel = window.getSelection();
-  if (!sel.rangeCount) return;
-  const range = sel.getRangeAt(0);
-  range.deleteContents();
-  const frag = document.createRange().createContextualFragment(html);
-  range.insertNode(frag);
-  range.collapse(false);
-}
-
 // === LIVE PREVIEW ===
-const titleInput = document.getElementById("title");
-const dateInput = document.getElementById("date");
-const imageInput = document.getElementById("image");
-const imageAltInput = document.getElementById("imageAlt");
-const preview = document.getElementById("previewContent");
-
 function updatePreview() {
   const title = titleInput.value || "Untitled Post";
   const date = dateInput.value || "No date set";
   const image = imageInput.value || "https://via.placeholder.com/800x400?text=Preview";
   const imageAlt = imageAltInput.value || "Preview image";
-  const content = editorDiv.innerHTML || "<p>Start typing...</p>";
+  const content = contentInput.value || "<p>Start typing...</p>";
   preview.innerHTML = `
     <img src="${image}" alt="${imageAlt}" class="rounded-xl mb-4 shadow-md w-full max-h-96 object-cover" />
     <h3 class="text-3xl font-bold mb-2 text-primary">${title}</h3>
@@ -204,37 +196,52 @@ function updatePreview() {
   `;
 }
 
-// === TOOLBAR FORMATTING ===
-document.querySelectorAll("[data-action]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const action = btn.getAttribute("data-action");
+[titleInput, dateInput, imageInput, imageAltInput, contentInput].forEach((el) =>
+  el.addEventListener("input", updatePreview)
+);
+updatePreview();
 
-    if (action === "link") {
-      const url = prompt("Enter URL:", "https://");
-      if (url) document.execCommand("createLink", false, url);
-    } else if (action === "h2" || action === "h3") {
-      document.execCommand("formatBlock", false, action);
-    } else if (action === "ul") {
-      document.execCommand("insertUnorderedList", false, null);
-    } else if (action === "ol") {
-      document.execCommand("insertOrderedList", false, null);
-    } else {
-      document.execCommand(action, false, null); // bold, italic
+// === TOOLBAR BUTTONS ===
+document.querySelectorAll(".toolbar-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const action = btn.dataset.action;
+    let start = contentInput.selectionStart;
+    let end = contentInput.selectionEnd;
+    let selectedText = contentInput.value.substring(start, end);
+    let insertText = "";
+
+    switch (action) {
+      case "b":
+        insertText = `<strong>${selectedText}</strong>`;
+        break;
+      case "i":
+        insertText = `<em>${selectedText}</em>`;
+        break;
+      case "h2":
+        insertText = `<h2>${selectedText}</h2>`;
+        break;
+      case "h3":
+        insertText = `<h3>${selectedText}</h3>`;
+        break;
+      case "ul":
+        insertText = `<ul><li>${selectedText}</li></ul>`;
+        break;
+      case "ol":
+        insertText = `<ol><li>${selectedText}</li></ol>`;
+        break;
+      case "link":
+        const url = prompt("Enter URL:");
+        if (url) insertText = `<a href="${url}" target="_blank">${selectedText || url}</a>`;
+        break;
     }
 
+    contentInput.value =
+      contentInput.value.slice(0, start) + insertText + contentInput.value.slice(end);
     updatePreview();
   });
 });
-
-// Live update preview
-[titleInput, dateInput, imageInput, imageAltInput].forEach((el) =>
-  el.addEventListener("input", updatePreview)
-);
-editorDiv.addEventListener("input", updatePreview);
 
 // === BUTTON EVENTS ===
 document.getElementById("loadBtn").addEventListener("click", loadPosts);
 saveBtn.addEventListener("click", savePost);
 deleteBtn.addEventListener("click", deletePost);
-
-updatePreview();

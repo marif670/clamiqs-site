@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calmiqs Blog Editor</title>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -22,7 +23,12 @@
         },
       };
     </script>
+
+    <!-- Main site CSS -->
     <link rel="stylesheet" href="/assets/css/style.css?v=12" />
+
+    <!-- Editor-specific CSS -->
+    <link rel="stylesheet" href="editor.css" />
   </head>
   <body class="bg-[#F9FAFB] text-gray-800 font-sans min-h-screen">
     <!-- 🔒 Login Section -->
@@ -79,6 +85,17 @@
           id="postSelect"
           class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
         ></select>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="mb-3">
+        <button type="button" class="toolbar-btn" data-action="b"><strong>B</strong></button>
+        <button type="button" class="toolbar-btn" data-action="i"><em>I</em></button>
+        <button type="button" class="toolbar-btn" data-action="h2">H2</button>
+        <button type="button" class="toolbar-btn" data-action="h3">H3</button>
+        <button type="button" class="toolbar-btn" data-action="ul">UL</button>
+        <button type="button" class="toolbar-btn" data-action="ol">OL</button>
+        <button type="button" class="toolbar-btn" data-action="link">Link</button>
       </div>
 
       <!-- Editor Form -->
@@ -144,76 +161,35 @@
 
         <!-- Content & Inline Images -->
         <div>
-          <label class="block text-sm font-medium mb-1">Content</label>
+          <label class="block text-sm font-medium mb-1">Content (HTML allowed)</label>
+          <textarea
+            id="content"
+            rows="10"
+            placeholder="<p>Your article here...</p>"
+            class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary mb-3"
+          ></textarea>
 
-          <!-- Formatting Toolbar -->
-          <div class="flex gap-2 mb-2">
-            <button
-              type="button"
-              data-action="bold"
-              class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              B
-            </button>
-            <button
-              type="button"
-              data-action="italic"
-              class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              I
-            </button>
-            <button
-              type="button"
-              data-action="h2"
-              class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              H2
-            </button>
-            <button
-              type="button"
-              data-action="h3"
-              class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              H3
-            </button>
-            <button
-              type="button"
-              data-action="ul"
-              class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              UL
-            </button>
-            <button
-              type="button"
-              data-action="ol"
-              class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              OL
-            </button>
-            <button
-              type="button"
-              data-action="link"
-              class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              Link
-            </button>
-          </div>
-
-          <div
-            id="editor"
-            contenteditable="true"
-            class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary mb-3 min-h-[300px]"
-          ></div>
-
-          <label class="block text-sm font-medium mb-1">Inline Image</label>
           <input type="file" id="inlineImageFile" class="mb-2" />
-          <select id="inlineImageAlign" class="border rounded px-2 py-1 mb-2 w-full">
-            <option value="mx-auto">Center</option>
-            <option value="float-left mr-4">Left</option>
-            <option value="float-right ml-4">Right</option>
+          <label class="block text-sm font-medium mb-1">Alt Text</label>
+          <input
+            type="text"
+            id="inlineImageAlt"
+            placeholder="Describe inline image"
+            class="w-full border rounded-lg px-4 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+
+          <label class="block text-sm font-medium mb-1">Alignment</label>
+          <select
+            id="inlineImageAlign"
+            class="w-full border rounded-lg px-4 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="left">Left</option>
+            <option value="center" selected>Center</option>
+            <option value="right">Right</option>
           </select>
+
           <button
-            id="insertImageBtn"
+            id="insertInlineBtn"
             class="bg-accent text-gray-800 px-3 py-1 rounded hover:bg-yellow-400 transition mb-3"
           >
             ➕ Upload & Insert Inline Image
@@ -236,7 +212,7 @@
       </div>
     </section>
 
-    <!-- Link to external JS -->
+    <!-- Editor JS -->
     <script src="editor.js"></script>
   </body>
 </html>
