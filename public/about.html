@@ -47,24 +47,8 @@
 
   <body class="font-sans bg-[#F9FAFB] text-gray-800">
     <!-- 🌿 Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-      <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
-        <h1 class="text-2xl font-bold text-primary">
-          <a href="index.html">Calmiqs</a>
-        </h1>
-        <nav>
-          <ul class="flex gap-6 text-gray-700">
-            <li><a href="index.html" class="hover:text-primary">Home</a></li>
-            <li><a href="tools.html" class="hover:text-primary">Tools</a></li>
-            <li><a href="blog.html" class="hover:text-primary">Blog</a></li>
-            <li>
-              <a href="about.html" class="text-primary font-semibold">About</a>
-            </li>
-            <li><a href="contact.html" class="hover:text-primary">Contact</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <!-- HEADER -->
+    <div id="navbar-container"></div>
 
     <!-- 🌤️ Hero Section -->
     <section class="relative text-center py-24 px-6 text-white overflow-hidden">
@@ -156,23 +140,26 @@
       </div>
     </section>
 
-    <!-- 🌿 Footer -->
-    <footer class="bg-white border-t border-gray-200 py-8 mt-20">
-      <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-        <p class="text-gray-600">
-          ©
-          <span id="year"></span>
-          Calmiqs — Wellness with a lighter footprint
-        </p>
-        <div class="flex gap-4 text-sm text-gray-500 mt-4 md:mt-0">
-          <a href="privacy.html" class="hover:text-primary">Privacy</a>
-          <a href="terms.html" class="hover:text-primary">Terms</a>
-        </div>
-      </div>
-    </footer>
+    <!-- FOOTER -->
+    <div id="footer-container"></div>
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script>
+      async function loadFragment(url, selector) {
+        try {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error("Failed to load " + url);
+          const html = await response.text();
+          document.querySelector(selector).innerHTML = html;
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      loadFragment("/assets/components/header.html", "#navbar-container");
+      loadFragment("/assets/components/footer.html", "#footer-container");
     </script>
   </body>
 </html>

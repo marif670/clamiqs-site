@@ -1,10 +1,10 @@
-<header class="bg-white shadow-md fixed top-0 w-full z-50">
+<header class="bg-[#0a1a3a] shadow-md fixed top-0 w-full z-50">
   <nav class="container mx-auto flex items-center justify-between py-4 px-6">
     <!-- Logo -->
-    <a href="/index.html" class="text-2xl font-bold text-primary">Calmiqs</a>
+    <a href="/index.html" class="text-2xl font-bold text-white">Calmiqs</a>
 
     <!-- Desktop Navigation -->
-    <div class="hidden md:flex space-x-6 font-medium text-gray-700">
+    <div class="hidden md:flex space-x-6 font-medium text-gray-200">
       <a href="/about.html" class="hover:text-primary transition">About</a>
       <a href="/blog.html" class="hover:text-primary transition">Blog</a>
       <a href="/tools.html" class="hover:text-primary transition">Tools</a>
@@ -26,7 +26,7 @@
     <!-- Mobile Menu Button -->
     <button
       id="menu-btn"
-      class="md:hidden text-gray-700 hover:text-primary focus:outline-none"
+      class="md:hidden text-gray-200 hover:text-primary focus:outline-none"
       aria-label="Toggle menu"
     >
       <svg
@@ -47,8 +47,8 @@
   </nav>
 
   <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden bg-white shadow-md md:hidden">
-    <div class="flex flex-col space-y-3 py-4 px-6 text-gray-700 font-medium">
+  <div id="mobile-menu" class="hidden bg-[#0a1a3a] shadow-md md:hidden">
+    <div class="flex flex-col space-y-3 py-4 px-6 text-gray-200 font-medium">
       <a href="/about.html" class="hover:text-primary transition">About</a>
       <a href="/blog.html" class="hover:text-primary transition">Blog</a>
       <a href="/tools.html" class="hover:text-primary transition">Tools</a>
@@ -57,7 +57,7 @@
       <a href="/terms.html" class="hover:text-primary transition">Terms</a>
       <a href="/disclaimer.html" class="hover:text-primary transition">Disclaimer</a>
 
-      <!-- CMS Link (Hidden by Default) -->
+      <!-- CMS Link (hidden by default) -->
       <a
         id="cms-link-mobile"
         href="/admin/editor.html"
@@ -83,7 +83,6 @@
     // --- Mobile Menu Toggle ---
     const menuBtn = document.getElementById("menu-btn");
     const mobileMenu = document.getElementById("mobile-menu");
-
     if (menuBtn && mobileMenu) {
       menuBtn.addEventListener("click", () => {
         mobileMenu.classList.toggle("hidden");
