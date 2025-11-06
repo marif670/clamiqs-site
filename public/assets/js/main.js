@@ -85,3 +85,15 @@ async function loadFragment(url, selector) {
         "<p class='text-center text-red-500'>Content failed to load. Please try again later.</p>";
   }
 }
+async function loadFragment(url, selector) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    const html = await response.text();
+    document.querySelector(selector).innerHTML = html;
+  } catch (err) {
+    console.error("Fragment load failed:", err);
+    document.querySelector(selector).innerHTML =
+      "<p class='text-red-500 text-center py-10'>Failed to load content.</p>";
+  }
+}

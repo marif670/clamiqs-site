@@ -87,8 +87,10 @@
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
 
+    // load content fragment
     <script>
-      // load content fragment
+      loadFragment("/assets/components/header.html", "#navbar-container");
+      loadFragment("/assets/components/footer.html", "#footer-container");
       loadFragment("/assets/content/privacy.html", "#content");
     </script>
   </body>
