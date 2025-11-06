@@ -69,31 +69,14 @@ cards.forEach((card) => {
     card.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
   });
 });
-// Simple fragment loader used by privacy/terms/disclaimer wrappers
-async function loadFragment(url, selector) {
+async function loadFragment(path, target) {
   try {
-    const res = await fetch(url, { cache: "no-cache" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const html = await res.text();
-    const el = document.querySelector(selector);
-    if (el) el.innerHTML = html;
-  } catch (err) {
-    console.error("Failed to load fragment:", url, err);
-    const el = document.querySelector(selector);
-    if (el)
-      el.innerHTML =
-        "<p class='text-center text-red-500'>Content failed to load. Please try again later.</p>";
-  }
-}
-async function loadFragment(url, selector) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`Failed to load ${path}`);
     const html = await response.text();
-    document.querySelector(selector).innerHTML = html;
-  } catch (err) {
-    console.error("Fragment load failed:", err);
-    document.querySelector(selector).innerHTML =
-      "<p class='text-red-500 text-center py-10'>Failed to load content.</p>";
+    document.querySelector(target).innerHTML = html;
+  } catch (error) {
+    console.error(error);
+    document.querySelector(target).innerHTML = "<p>Content failed to load.</p>";
   }
 }
