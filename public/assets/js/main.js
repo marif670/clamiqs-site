@@ -69,7 +69,7 @@ cards.forEach((card) => {
     card.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
   });
 });
-async function loadFragment(path, selector) {
+window.loadFragment = async function (path, selector) {
   try {
     const res = await fetch(path, { cache: "no-cache" });
     if (!res.ok) throw new Error(`Failed to load ${path} (status ${res.status})`);
@@ -82,4 +82,4 @@ async function loadFragment(path, selector) {
     if (container)
       container.innerHTML = '<p class="text-red-500 text-center">Failed to load content.</p>';
   }
-}
+};
