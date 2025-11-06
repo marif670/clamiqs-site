@@ -1,0 +1,39 @@
+<!-- Footer Component -->
+<footer class="bg-gray-900 text-gray-300 py-10 mt-20">
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-10">
+    <div>
+      <h3 class="text-xl font-semibold text-white mb-3">Calmiqs</h3>
+      <p class="text-sm leading-relaxed">
+        Empowering sustainable innovation through AI and smart technology.
+      </p>
+    </div>
+
+    <div>
+      <h4 class="text-lg font-semibold text-white mb-3">Quick Links</h4>
+      <ul class="space-y-2">
+        <li><a href="/about.html" class="hover:text-primary">About</a></li>
+        <li><a href="/blog.html" class="hover:text-primary">Blog</a></li>
+        <li><a href="/contact.html" class="hover:text-primary">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="text-lg font-semibold text-white mb-3">Legal</h4>
+      <ul class="space-y-2">
+        <li><a href="/privacy.html" class="hover:text-primary">Privacy Policy</a></li>
+        <li><a href="/terms.html" class="hover:text-primary">Terms & Conditions</a></li>
+        <li><a href="/disclaimer.html" class="hover:text-primary">Disclaimer</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="text-center text-gray-500 text-sm mt-10">
+    ©
+    <span id="year"></span>
+    Calmiqs. All rights reserved.
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</footer>
