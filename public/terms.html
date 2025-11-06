@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Terms & Conditions | Calmiqs</title>
 
+    <!-- Tailwind (same setup as other pages) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            colors: { primary: "#4FA49A", accent: "#FFD580", tech: "#5A67D8" },
-            fontFamily: { sans: ["Poppins", "sans-serif"] },
-            animation: { gradient: "gradientBG 8s ease infinite" },
+            colors: {
+              primary: "#4FA49A",
+              accent: "#FFD580",
+              tech: "#5A67D8",
+              legalbg: "#EDF7F6",
+            },
+            fontFamily: {
+              sans: ["Poppins", "sans-serif"],
+            },
+            animation: {
+              gradient: "gradientBG 8s ease infinite",
+            },
             keyframes: {
               gradientBG: {
                 "0%,100%": { backgroundPosition: "0% 50%" },
@@ -29,63 +39,38 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script defer src="/assets/js/main.js"></script>
   </head>
-  <body class="font-sans text-gray-800 bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-md fixed top-0 w-full z-50">
-      <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-        <a href="/" class="text-2xl font-semibold text-primary">Calmiqs</a>
-        <nav class="space-x-6 text-sm font-medium">
-          <a href="/" class="hover:text-primary">Home</a>
-          <a href="/about.html" class="hover:text-primary">About</a>
-          <a href="/blog.html" class="hover:text-primary">Blog</a>
-          <a href="/contact.html" class="hover:text-primary">Contact</a>
-        </nav>
-      </div>
-    </header>
 
-    <!-- Hero -->
+  <body class="font-sans bg-legalbg text-gray-800">
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
     <section
-      class="h-64 md:h-80 flex items-center justify-center text-center text-white mt-16 bg-gradient-to-r from-primary via-tech to-accent bg-[length:200%_200%] animate-gradient"
+      class="bg-gradient-to-r from-tech via-primary to-accent bg-[length:200%_200%] animate-gradient text-white text-center py-24 shadow-lg"
     >
-      <div class="px-6">
-        <h1 class="text-4xl md:text-5xl font-bold mb-3">Terms & Conditions</h1>
-        <p class="text-lg max-w-2xl mx-auto">
-          Please read these terms carefully before using our services.
-        </p>
-      </div>
+      <h1 class="text-5xl font-bold mb-3">Terms & Conditions</h1>
+      <p class="text-lg opacity-90">
+        Understand your rights and responsibilities when using Calmiqs.
+      </p>
     </section>
 
-    <!-- Main -->
+    <!-- Terms Content -->
     <main class="max-w-5xl mx-auto px-6 py-16">
-      <div id="terms-content" class="bg-white rounded-2xl shadow-xl p-10 md:p-12">
-        <p class="text-center text-gray-400">Loading Terms and Conditions…</p>
+      <div id="content" class="bg-white rounded-2xl shadow-xl p-10 md:p-12 leading-relaxed">
+        <p class="text-center text-gray-400">Loading Terms & Conditions...</p>
       </div>
     </main>
 
-    <!-- Footer — updated to include Disclaimer -->
-    <footer class="bg-gray-900 text-gray-300 py-10">
-      <div class="max-w-7xl mx-auto px-6 text-center">
-        <p class="text-sm">
-          &copy;
-          <span id="year"></span>
-          Calmiqs. All rights reserved.
-        </p>
-        <div class="mt-4 space-x-6">
-          <a href="/privacy.html" class="hover:text-white">Privacy</a>
-          <a href="/terms.html" class="hover:text-white">Terms</a>
-          <a href="/disclaimer.html" class="hover:text-white">Disclaimer</a>
-        </div>
-      </div>
-    </footer>
+    <div id="footer-container"></div>
 
+    <!-- JS loader -->
+    <script src="/assets/js/main.js"></script>
     <script>
-      document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
-
-    <script>
-      loadFragment("/assets/content/terms.html", "#terms-content");
+      window.addEventListener("DOMContentLoaded", () => {
+        loadFragment("/assets/components/header.html", "#navbar-container");
+        loadFragment("/assets/components/footer.html", "#footer-container");
+        loadFragment("/assets/content/terms.html", "#content");
+      });
     </script>
   </body>
 </html>
