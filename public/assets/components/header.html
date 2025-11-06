@@ -1,5 +1,5 @@
-<header class="bg-[#0a1a3a] w-full fixed top-0 z-0 shadow-md">
-  <nav class="container mx-auto flex items-center justify-between py-4 px-6 relative z-10">
+<header class="bg-[#0a1a3a] w-full fixed top-0 z-50 shadow-md">
+  <nav class="container mx-auto flex items-center justify-between py-4 px-6">
     <!-- Logo -->
     <a href="/index.html" class="text-2xl font-bold text-white">Calmiqs</a>
 
@@ -50,7 +50,6 @@
       <a href="/privacy.html" class="hover:text-primary transition">Privacy</a>
       <a href="/terms.html" class="hover:text-primary transition">Terms</a>
       <a href="/disclaimer.html" class="hover:text-primary transition">Disclaimer</a>
-
       <a
         id="cms-link-mobile"
         href="/admin/editor.html"
@@ -62,24 +61,22 @@
   </div>
 
   <script>
-    // --- CMS Visibility Logic ---
+    // CMS visibility logic
     document.addEventListener("DOMContentLoaded", () => {
       const isAdmin = localStorage.getItem("isAdmin") === "true";
       const cmsDesktop = document.getElementById("cms-link");
       const cmsMobile = document.getElementById("cms-link-mobile");
       if (isAdmin) {
-        if (cmsDesktop) cmsDesktop.classList.remove("hidden");
-        if (cmsMobile) cmsMobile.classList.remove("hidden");
+        cmsDesktop?.classList.remove("hidden");
+        cmsMobile?.classList.remove("hidden");
       }
     });
 
-    // --- Mobile Menu Toggle ---
+    // Mobile menu toggle
     const menuBtn = document.getElementById("menu-btn");
     const mobileMenu = document.getElementById("mobile-menu");
-    if (menuBtn && mobileMenu) {
-      menuBtn.addEventListener("click", () => {
-        mobileMenu.classList.toggle("hidden");
-      });
-    }
+    menuBtn?.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
   </script>
 </header>
