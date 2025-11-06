@@ -1,4 +1,16 @@
 // --- Calmiqs Main Script ---
+
+async function loadFragment(url, selector) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to load: ${url}`);
+    const html = await response.text();
+    document.querySelector(selector).innerHTML = html;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // Handles breathing tool and any global site behavior
 
 document.addEventListener("DOMContentLoaded", () => {
