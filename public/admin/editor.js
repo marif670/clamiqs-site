@@ -32,22 +32,31 @@ const inlineAlignSelect = document.getElementById("inlineAlign");
 const applyInlineBtn = document.getElementById("applyInlineFormat");
 
 // --- AUTHENTICATION ---
+// Login button click
 loginBtn.addEventListener("click", () => {
   if (passwordInput.value.trim() === PASSWORD) {
-    sessionStorage.setItem("calmiqsAuth", "true");
     localStorage.setItem("isAdmin", "true");
     authSection.classList.add("hidden");
     editorSection.classList.remove("hidden");
     loadPosts();
-  } else alert("Incorrect password.");
+  } else {
+    alert("Incorrect password.");
+  }
 });
 
-if (sessionStorage.getItem("calmiqsAuth") === "true") {
-  localStorage.setItem("isAdmin", "true");
+// On page load, check if admin is logged in
+if (localStorage.getItem("isAdmin") === "true") {
   authSection.classList.add("hidden");
   editorSection.classList.remove("hidden");
   loadPosts();
 }
+
+// Logout button logic
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("isAdmin");
+  authSection.classList.remove("hidden");
+  editorSection.classList.add("hidden");
+});
 
 // --- KV POSTS ---
 async function loadPosts() {
@@ -307,7 +316,7 @@ deleteBtn.addEventListener("click", deletePost);
 });
 updatePreview();
 logoutBtn.addEventListener("click", () => {
-  sessionStorage.removeItem("calmiqsAuth");
   localStorage.removeItem("isAdmin");
-  location.reload();
+  authSection.classList.remove("hidden");
+  editorSection.classList.add("hidden");
 });

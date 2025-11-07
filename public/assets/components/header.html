@@ -18,7 +18,7 @@
       <a href="/disclaimer.html" class="hover:text-primary transition">Disclaimer</a>
       <a
         href="/admin/editor.html"
-        class="hidden px-4 py-1 bg-tech text-white rounded-lg hover:bg-primary transition"
+        class="hidden md:inline-flex bg-tech hover:bg-primary text-white px-4 py-2 rounded-xl shadow-md transition"
       >
         CMS
       </a>
@@ -59,7 +59,7 @@
       <a href="/disclaimer.html" class="hover:text-primary transition">Disclaimer</a>
       <a
         href="/admin/editor.html"
-        class="bg-tech text-white px-3 py-2 rounded-lg text-center hover:bg-primary transition"
+        class="hidden md:inline-flex bg-tech hover:bg-primary text-white px-4 py-2 rounded-xl shadow-md transition"
       >
         CMS
       </a>
@@ -83,6 +83,17 @@
     const menu = document.getElementById("mobile-menu");
     toggle.addEventListener("click", () => {
       menu.classList.toggle("hidden");
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const isAdmin = localStorage.getItem("isAdmin") === "true";
+      const cmsDesktop = document.querySelector("nav a[href='/admin/editor.html']");
+      const cmsMobile = document.querySelector("#mobile-menu a[href='/admin/editor.html']");
+      if (isAdmin) {
+        cmsDesktop?.classList.remove("hidden");
+        cmsMobile?.classList.remove("hidden");
+      }
     });
   </script>
 </header>
