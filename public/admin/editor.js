@@ -1,35 +1,40 @@
-// --- ELEMENTS ---
-const loginBtn = document.getElementById("loginBtn");
-const passwordInput = document.getElementById("passwordInput");
-const authSection = document.getElementById("authSection");
-const editorSection = document.getElementById("editorSection");
-const logoutBtn = document.getElementById("logoutBtn");
-
-// --- CONFIG ---
-const PASSWORD = "Hadia@2017"; // <-- replace with your actual password
-
-// --- LOGIN ---
-loginBtn.addEventListener("click", (e) => {
-  e.preventDefault(); // Prevent form submission / page reload
-
-  const enteredPassword = passwordInput.value.trim();
-  if (enteredPassword === PASSWORD) {
-    // Set admin in localStorage
-    localStorage.setItem("isAdmin", "true");
-
-    // Show editor, hide login
-    authSection.classList.add("hidden");
-    editorSection.classList.remove("hidden");
-
-    // Load posts or editor content
-    loadPosts();
-  } else {
-    alert("Incorrect password.");
-  }
-});
-
-// --- PAGE LOAD: Check if already logged in ---
 document.addEventListener("DOMContentLoaded", () => {
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const passwordInput = document.getElementById("passwordInput");
+  const authSection = document.getElementById("authSection");
+  const editorSection = document.getElementById("editorSection");
+
+  const PASSWORD = "Hadia@2017"; // Replace with your password
+
+  // LOGIN
+  loginBtn.addEventListener("click", (e) => {
+    e.preventDefault(); // Prevent form submit / reload
+    if (passwordInput.value.trim() === PASSWORD) {
+      localStorage.setItem("isAdmin", "true");
+      authSection.classList.add("hidden");
+      editorSection.classList.remove("hidden");
+      loadPosts(); // Load posts/editor content
+    } else {
+      alert("Incorrect password.");
+    }
+  });
+
+  // LOGOUT
+  logoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    localStorage.removeItem("isAdmin");
+    authSection.classList.remove("hidden");
+    editorSection.classList.add("hidden");
+
+    // Hide CMS button
+    const cmsDesktop = document.querySelector("nav a[href='/admin/editor.html']");
+    const cmsMobile = document.querySelector("#mobile-menu a[href='/admin/editor.html']");
+    cmsDesktop?.classList.add("hidden");
+    cmsMobile?.classList.add("hidden");
+  });
+
+  // AUTO-LOGIN if already admin
   if (localStorage.getItem("isAdmin") === "true") {
     authSection.classList.add("hidden");
     editorSection.classList.remove("hidden");
@@ -43,19 +48,4 @@ document.addEventListener("DOMContentLoaded", () => {
     cmsDesktop?.classList.remove("hidden");
     cmsMobile?.classList.remove("hidden");
   }
-});
-
-// --- LOGOUT ---
-logoutBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  localStorage.removeItem("isAdmin");
-
-  authSection.classList.remove("hidden");
-  editorSection.classList.add("hidden");
-
-  // Optionally hide CMS button again
-  const cmsDesktop = document.querySelector("nav a[href='/admin/editor.html']");
-  const cmsMobile = document.querySelector("#mobile-menu a[href='/admin/editor.html']");
-  cmsDesktop?.classList.add("hidden");
-  cmsMobile?.classList.add("hidden");
 });
