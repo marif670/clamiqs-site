@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("isAdmin", "true");
       authSection.classList.add("hidden");
       editorSection.classList.remove("hidden");
-      loadPosts(); // Load posts/editor content
+      loadPosts?.(); // Load posts/editor content
     } else {
       alert("Incorrect password.");
     }
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("isAdmin") === "true") {
     authSection.classList.add("hidden");
     editorSection.classList.remove("hidden");
-    loadPosts();
+    loadPosts?.();
   }
 
   // CMS button visibility in header
