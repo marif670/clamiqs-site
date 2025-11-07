@@ -1,13 +1,14 @@
-:root {
-  --bg: #fff;
-  --text: #111;
-  --accent: #2b8a7a;
-}
 /* Remove default browser margin/padding globally */
 html,
 body {
   margin: 0;
   padding: 0;
+}
+
+:root {
+  --bg: #fff;
+  --text: #111;
+  --accent: #2b8a7a;
 }
 
 * {
@@ -597,15 +598,4 @@ section.features .card p {
 .card:hover .card-orb {
   opacity: 0.9;
   filter: blur(50px);
-}
-/* Prevent content from being hidden under fixed header */
-body {
-  padding-top: 64px; /* match the header height (py-4 + logo) */
-}
-
-/* Optional: adjust for larger screens if needed */
-@media (min-width: 768px) {
-  body {
-    padding-top: 64px; /* adjust if header height changes on desktop */
-  }
 }
