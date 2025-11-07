@@ -6,7 +6,7 @@ const editorSection = document.getElementById("editorSection");
 const logoutBtn = document.getElementById("logoutBtn");
 
 // --- CONFIG ---
-const PASSWORD = "YourAdminPasswordHere"; // <-- replace with your actual password
+const PASSWORD = "Hadia@2017"; // <-- replace with your actual password
 
 // --- LOGIN ---
 loginBtn.addEventListener("click", (e) => {
