@@ -4,91 +4,108 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calmiqs Editor</title>
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#4FA49A",
-              accent: "#FFD580",
-              tech: "#5A67D8",
-            },
-            fontFamily: { sans: ["Poppins", "sans-serif"] },
-          },
-        },
-      };
-    </script>
-    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script defer src="/admin/editor.js"></script>
+    <script defer src="/admin/auth.js"></script>
+    <script defer src="/assets/js/include.js"></script>
   </head>
-  <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-    <!-- Header (Shared across site) -->
-    <header class="w-full bg-navy-900 text-white fixed top-0 left-0 right-0 shadow-md z-50">
-      <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-        <a href="/" class="text-2xl font-semibold tracking-wide">Calmiqs</a>
 
-        <nav class="flex items-center gap-6">
-          <a href="/index.html" class="hover:text-blue-300">Home</a>
-          <a href="/blog.html" class="hover:text-blue-300">Blog</a>
-          <a href="/about.html" class="hover:text-blue-300">About</a>
-          <a href="/contact.html" class="hover:text-blue-300">Contact</a>
-          <button
-            id="cmsBtn"
-            class="hidden bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm font-medium"
-          >
-            CMS
-          </button>
-        </nav>
-      </div>
-    </header>
+  <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+    <!-- Header Include -->
+    <div id="header"></div>
 
-    <!-- Main Section -->
-    <main class="flex-grow pt-24 pb-12">
-      <div id="authSection" class="flex flex-col items-center justify-center mt-12">
-        <h2 class="text-2xl font-bold mb-4 text-navy-900">Enter Admin Password</h2>
+    <!-- AUTH SECTION -->
+    <section
+      id="authSection"
+      class="flex-grow flex flex-col items-center justify-center py-12 px-4"
+    >
+      <div class="bg-white rounded-xl shadow-md p-8 w-full max-w-sm text-center">
+        <h2 class="text-2xl font-bold mb-4">Calmiqs Editor Login</h2>
         <input
-          id="passwordInput"
           type="password"
-          placeholder="Password"
-          class="border border-gray-300 rounded px-4 py-2 mb-3 w-64 text-center"
+          id="passwordInput"
+          placeholder="Enter Password"
+          class="border border-gray-300 rounded-lg px-4 py-2 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-green-400"
         />
         <button
           id="loginBtn"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-medium"
+          class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg w-full"
         >
           Login
         </button>
       </div>
+    </section>
 
-      <div id="editorSection" class="hidden max-w-5xl mx-auto bg-white rounded-2xl shadow-lg p-8">
-        <div class="flex justify-between items-center mb-6">
-          <h1 class="text-3xl font-bold text-navy-900">Calmiqs Editor</h1>
+    <!-- EDITOR SECTION -->
+    <section id="editorSection" class="hidden flex-grow container mx-auto px-4 py-12">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-bold">Calmiqs Editor</h1>
+        <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+          Logout
+        </button>
+      </div>
+
+      <!-- POST CREATION AREA -->
+      <div id="postEditor" class="bg-white rounded-xl shadow p-6 mb-10">
+        <h2 class="text-xl font-semibold mb-4">Create or Edit Post</h2>
+        <input
+          id="postTitle"
+          type="text"
+          placeholder="Post Title"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4"
+        />
+        <textarea
+          id="postContent"
+          rows="10"
+          placeholder="Write your content here..."
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4"
+        ></textarea>
+        <div class="flex items-center justify-between">
           <button
-            id="logoutBtn"
-            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-medium"
+            id="addImageBtn"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
           >
-            Logout
+            Add Image
+          </button>
+          <button
+            id="savePostBtn"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+          >
+            Save Post
           </button>
         </div>
-
-        <p class="text-gray-600 mb-4">Your blog posts or tools editor will load here.</p>
-        <div id="editorContent" class="border-t border-gray-200 pt-4">
-          <!-- loadPosts() or dynamic content will appear here -->
-        </div>
       </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-navy-900 text-white py-6 mt-auto text-center text-sm">
-      ©
-      <span id="year"></span>
-      Calmiqs. All rights reserved.
-    </footer>
+      <!-- EXISTING POSTS -->
+      <div id="postsList" class="grid md:grid-cols-2 gap-6">
+        <!-- loadPosts() dynamically injects posts here -->
+      </div>
+    </section>
 
-    <script src="/admin/editor.js"></script>
+    <!-- Footer Include -->
+    <div id="footer"></div>
+
     <script>
-      document.getElementById("year").textContent = new Date().getFullYear();
+      // Include header and footer dynamically
+      document.addEventListener("DOMContentLoaded", async () => {
+        async function includeHTML(id, file) {
+          const el = document.getElementById(id);
+          if (el) {
+            const resp = await fetch(file);
+            el.innerHTML = await resp.text();
+          }
+        }
+        await includeHTML("header", "/components/header.html");
+        await includeHTML("footer", "/components/footer.html");
+
+        // Toggle CMS button visibility after header load
+        const isAdmin = sessionStorage.getItem("calmiqsAuth") === "true";
+        const cmsBtn = document.querySelector("#cmsBtn");
+        if (cmsBtn) cmsBtn.classList.toggle("hidden", !isAdmin);
+      });
     </script>
   </body>
 </html>
