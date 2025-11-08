@@ -73,10 +73,10 @@
       const cmsButtons = document.querySelectorAll(".cmsBtn");
 
       const isAdmin =
-        sessionStorage.getItem("isAdmin") === "true" ||
         sessionStorage.getItem("calmiqsAuth") === "true" ||
-        localStorage.getItem("isAdmin") === "true" ||
-        localStorage.getItem("calmiqsAuth") === "true";
+        sessionStorage.getItem("isAdmin") === "true" ||
+        localStorage.getItem("calmiqsAuth") === "true" ||
+        localStorage.getItem("isAdmin") === "true";
 
       if (isAdmin) {
         cmsButtons.forEach((btn) => btn.classList.remove("hidden"));
