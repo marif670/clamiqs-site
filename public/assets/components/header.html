@@ -69,18 +69,18 @@
     const toggle = document.getElementById("mobile-menu-toggle");
     const menu = document.getElementById("mobile-menu");
     toggle.addEventListener("click", () => menu.classList.toggle("hidden"));
-    // --- CMS Button Visibility Control ---
+  </script>
+  <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const isAdmin = localStorage.getItem("isAdmin") === "true";
-      const cmsDesktop = document.getElementById("cmsLinkDesktop");
-      const cmsMobile = document.getElementById("cmsLinkMobile");
+      const isAdmin =
+        localStorage.getItem("isAdmin") === "true" ||
+        sessionStorage.getItem("calmiqsAuth") === "true";
 
       if (isAdmin) {
-        cmsDesktop.classList.remove("hidden");
-        cmsMobile.classList.remove("hidden");
-      } else {
-        cmsDesktop.classList.add("hidden");
-        cmsMobile.classList.add("hidden");
+        const cmsDesktop = document.getElementById("cmsBtnDesktop");
+        const cmsMobile = document.getElementById("cmsBtnMobile");
+        if (cmsDesktop) cmsDesktop.classList.remove("hidden");
+        if (cmsMobile) cmsMobile.classList.remove("hidden");
       }
     });
   </script>

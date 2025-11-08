@@ -35,6 +35,7 @@ const applyInlineBtn = document.getElementById("applyInlineFormat");
 loginBtn.addEventListener("click", () => {
   if (passwordInput.value.trim() === PASSWORD) {
     sessionStorage.setItem("calmiqsAuth", "true");
+    localStorage.setItem("isAdmin", "true"); // must be set
     authSection.classList.add("hidden");
     editorSection.classList.remove("hidden");
     loadPosts();
