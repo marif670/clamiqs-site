@@ -22,59 +22,73 @@
     </script>
     <link rel="stylesheet" href="/assets/css/style.css" />
   </head>
-  <body class="bg-gray-50 font-sans m-0 p-0">
-    <!-- Header placeholder -->
-    <div id="navbar-container"></div>
+  <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+    <!-- Header (Shared across site) -->
+    <header class="w-full bg-navy-900 text-white fixed top-0 left-0 right-0 shadow-md z-50">
+      <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+        <a href="/" class="text-2xl font-semibold tracking-wide">Calmiqs</a>
 
-    <!-- Login Section -->
-    <div id="authSection" class="max-w-md mx-auto mt-24 p-6 bg-white shadow-lg rounded-xl">
-      <h2 class="text-2xl font-bold mb-4 text-center">Admin Login</h2>
-      <input
-        type="password"
-        id="passwordInput"
-        placeholder="Enter password"
-        class="w-full border px-3 py-2 rounded mb-4"
-      />
-      <button
-        type="button"
-        id="loginBtn"
-        class="w-full bg-tech text-white py-2 rounded hover:bg-primary transition"
-      >
-        Login
-      </button>
-    </div>
+        <nav class="flex items-center gap-6">
+          <a href="/index.html" class="hover:text-blue-300">Home</a>
+          <a href="/blog.html" class="hover:text-blue-300">Blog</a>
+          <a href="/about.html" class="hover:text-blue-300">About</a>
+          <a href="/contact.html" class="hover:text-blue-300">Contact</a>
+          <button
+            id="cmsBtn"
+            class="hidden bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm font-medium"
+          >
+            CMS
+          </button>
+        </nav>
+      </div>
+    </header>
 
-    <!-- Editor Section -->
-    <div
-      id="editorSection"
-      class="hidden max-w-6xl mx-auto mt-12 p-6 bg-white shadow-lg rounded-xl"
-    >
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold">Calmiqs Editor</h2>
+    <!-- Main Section -->
+    <main class="flex-grow pt-24 pb-12">
+      <div id="authSection" class="flex flex-col items-center justify-center mt-12">
+        <h2 class="text-2xl font-bold mb-4 text-navy-900">Enter Admin Password</h2>
+        <input
+          id="passwordInput"
+          type="password"
+          placeholder="Password"
+          class="border border-gray-300 rounded px-4 py-2 mb-3 w-64 text-center"
+        />
         <button
-          id="logoutBtn"
-          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+          id="loginBtn"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-medium"
         >
-          Logout
+          Login
         </button>
       </div>
 
-      <!-- Editor content goes here -->
-      <div id="editorContent">
-        <p class="text-gray-700">Your blog posts or tools editor will load here.</p>
+      <div id="editorSection" class="hidden max-w-5xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-3xl font-bold text-navy-900">Calmiqs Editor</h1>
+          <button
+            id="logoutBtn"
+            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-medium"
+          >
+            Logout
+          </button>
+        </div>
+
+        <p class="text-gray-600 mb-4">Your blog posts or tools editor will load here.</p>
+        <div id="editorContent" class="border-t border-gray-200 pt-4">
+          <!-- loadPosts() or dynamic content will appear here -->
+        </div>
       </div>
-    </div>
+    </main>
 
-    <!-- Footer placeholder -->
-    <div id="footer-container"></div>
+    <!-- Footer -->
+    <footer class="bg-navy-900 text-white py-6 mt-auto text-center text-sm">
+      ©
+      <span id="year"></span>
+      Calmiqs. All rights reserved.
+    </footer>
 
-    <!-- JS -->
-
-    <script>
-      // Load header/footer fragments
-      loadFragment("/assets/components/header.html", "#navbar-container");
-      loadFragment("/assets/components/footer.html", "#footer-container");
-    </script>
     <script src="/admin/editor.js"></script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
   </body>
 </html>
