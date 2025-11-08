@@ -74,6 +74,8 @@
     document.addEventListener("DOMContentLoaded", () => {
       const isAdmin =
         localStorage.getItem("isAdmin") === "true" ||
+        sessionStorage.getItem("isAdmin") === "true" ||
+        localStorage.getItem("calmiqsAuth") === "true" ||
         sessionStorage.getItem("calmiqsAuth") === "true";
 
       if (isAdmin) {
