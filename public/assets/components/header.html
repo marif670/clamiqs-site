@@ -63,4 +63,28 @@
       </a>
     </div>
   </nav>
+  <script type="module">
+    // ✅ Load the Calmiqs Auth utility dynamically
+    import { checkAdminAccess } from "/admin/auth.js";
+
+    function showCMSButtons() {
+      const cmsButtons = document.querySelectorAll(".cmsBtn");
+      if (checkAdminAccess()) {
+        cmsButtons.forEach((btn) => btn.classList.remove("hidden"));
+      } else {
+        cmsButtons.forEach((btn) => btn.classList.add("hidden"));
+      }
+    }
+
+    // Run once DOM is ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", showCMSButtons);
+    } else {
+      showCMSButtons();
+    }
+
+    // Watch for dynamically loaded header (like navbar injection)
+    const observer = new MutationObserver(showCMSButtons);
+    observer.observe(document.body, { childList: true, subtree: true });
+  </script>
 </header>
