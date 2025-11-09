@@ -50,33 +50,6 @@
     <!-- Header Placeholder -->
     <div id="navbar-container"></div>
 
-    <script>
-      fetch("/header.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("navbar-container").innerHTML = html;
-
-          // After header is loaded:
-          const toggle = document.getElementById("mobile-menu-toggle");
-          const menu = document.getElementById("mobile-menu");
-          if (toggle && menu) {
-            toggle.addEventListener("click", () => menu.classList.toggle("hidden"));
-          }
-
-          // CMS Button visibility logic
-          const isAdmin =
-            sessionStorage.getItem("calmiqsAuth") === "true" ||
-            sessionStorage.getItem("isAdmin") === "true" ||
-            localStorage.getItem("calmiqsAuth") === "true" ||
-            localStorage.getItem("isAdmin") === "true";
-
-          if (isAdmin) {
-            document.querySelectorAll(".cmsBtn").forEach((btn) => btn.classList.remove("hidden"));
-          }
-        })
-        .catch((err) => console.error("Header load failed:", err));
-    </script>
-
     <!-- 🌤️ Hero Section -->
     <section class="relative text-center py-24 px-6 text-white overflow-hidden">
       <!-- Moving gradient background -->
@@ -156,6 +129,32 @@
         if (cmsDesktop) cmsDesktop.classList.remove("hidden");
         if (cmsMobile) cmsMobile.classList.remove("hidden");
       }
+    </script>
+    <script>
+      fetch("/header.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("navbar-container").innerHTML = html;
+
+          // After header is loaded:
+          const toggle = document.getElementById("mobile-menu-toggle");
+          const menu = document.getElementById("mobile-menu");
+          if (toggle && menu) {
+            toggle.addEventListener("click", () => menu.classList.toggle("hidden"));
+          }
+
+          // CMS Button visibility logic
+          const isAdmin =
+            sessionStorage.getItem("calmiqsAuth") === "true" ||
+            sessionStorage.getItem("isAdmin") === "true" ||
+            localStorage.getItem("calmiqsAuth") === "true" ||
+            localStorage.getItem("isAdmin") === "true";
+
+          if (isAdmin) {
+            document.querySelectorAll(".cmsBtn").forEach((btn) => btn.classList.remove("hidden"));
+          }
+        })
+        .catch((err) => console.error("Header load failed:", err));
     </script>
   </body>
 </html>
