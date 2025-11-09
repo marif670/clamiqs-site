@@ -50,6 +50,35 @@
     <!-- Header Placeholder -->
     <div id="navbar-container"></div>
 
+    <script>
+      // Load header.html dynamically
+      fetch("/header.html?v=2")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("navbar-container").innerHTML = html;
+
+          // Re-run CMS button logic after header is loaded
+          const cmsButtons = document.querySelectorAll(".cmsBtn");
+          const isAdmin =
+            sessionStorage.getItem("calmiqsAuth") === "true" ||
+            sessionStorage.getItem("isAdmin") === "true" ||
+            localStorage.getItem("calmiqsAuth") === "true" ||
+            localStorage.getItem("isAdmin") === "true";
+
+          if (isAdmin) {
+            cmsButtons.forEach((btn) => btn.classList.remove("hidden"));
+          }
+
+          // Attach mobile menu toggle (since it’s in header.html)
+          const toggle = document.getElementById("mobile-menu-toggle");
+          const menu = document.getElementById("mobile-menu");
+          if (toggle && menu) {
+            toggle.addEventListener("click", () => menu.classList.toggle("hidden"));
+          }
+        })
+        .catch((err) => console.error("Failed to load header:", err));
+    </script>
+
     <!-- 🌤️ Hero Section -->
     <section class="relative text-center py-24 px-6 text-white overflow-hidden">
       <!-- Moving gradient background -->
