@@ -1,0 +1,60 @@
+/* /assets/css/editor-images.css */
+
+/* Floating alt-warning badge for auto-generated alt text */
+.calmiqs-alt-warning {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(255, 165, 0, 0.95);
+  color: #000;
+  padding: 2px 6px;
+  font-size: 11px;
+  border-radius: 4px;
+  z-index: 5;
+}
+
+/* Resizer handle — bottom-right */
+.calmiqs-resizer {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  right: 2px;
+  bottom: 2px;
+  cursor: se-resize;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 100%);
+  border-radius: 2px;
+  z-index: 4;
+}
+
+/* Image wrapper so we can position controls */
+.calmiqs-img-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Group container default padding */
+.calmiqs-img-group {
+  gap: 8px;
+}
+
+/* small toolbar */
+#calmiqs-inline-toolbar {
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.2);
+}
+
+/* Gallery thumbnail checkbox overlay */
+.calmiqs-thumb-selected {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 2;
+}

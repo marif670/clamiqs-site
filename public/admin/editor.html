@@ -26,6 +26,7 @@
 
     <!-- Custom Editor CSS -->
     <link rel="stylesheet" href="editor.css?v=1" />
+    <link rel="stylesheet" href="/assets/css/editor-images.css" />
   </head>
   <body class="bg-[#F9FAFB] text-gray-800 font-sans min-h-screen">
     <!-- Header Placeholder -->
@@ -168,6 +169,70 @@
           ></div>
 
           <input type="file" id="inlineImageFile" class="mb-2" />
+          <!-- START: Calmiqs Image Manager (paste right after your #inlineImageFile input) -->
+          <!-- Image Gallery Modal -->
+          <div
+            id="calmiqs-image-modal"
+            class="hidden fixed inset-0 z-50 flex items-start justify-center p-4"
+          >
+            <div
+              class="bg-white dark:bg-slate-900 rounded-lg shadow-lg w-full max-w-4xl overflow-hidden"
+            >
+              <div class="flex items-center justify-between p-3 border-b">
+                <h3 class="text-lg font-medium">Insert images</h3>
+                <div>
+                  <button id="calmiqs-upload-new-btn" class="btn mr-2">Upload new</button>
+                  <button id="calmiqs-gallery-close" class="btn">Close</button>
+                </div>
+              </div>
+
+              <!-- Filter / Search -->
+              <div class="p-3 border-b">
+                <input
+                  id="calmiqs-gallery-search"
+                  type="search"
+                  placeholder="Search images..."
+                  class="w-full px-3 py-2 rounded border"
+                />
+              </div>
+
+              <!-- Grid -->
+              <div class="p-3">
+                <div id="calmiqs-gallery-grid" class="grid grid-cols-3 gap-3"></div>
+              </div>
+
+              <div class="p-3 border-t flex items-center justify-between">
+                <div>
+                  <label class="inline-flex items-center gap-2">
+                    <input id="calmiqs-select-all" type="checkbox" class="form-checkbox" />
+                    <span>Select all</span>
+                  </label>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="calmiqs-insert-selected" class="btn">Insert Selected</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hidden small inline edit toolbar for selected images inside editor -->
+          <div
+            id="calmiqs-inline-toolbar"
+            class="hidden fixed z-40 p-2 rounded shadow bg-white dark:bg-slate-900"
+          >
+            <div class="flex gap-2 items-center">
+              <button id="calmiqs-edit-meta" class="btn">Edit</button>
+              <button id="calmiqs-remove-image" class="btn">Remove</button>
+              <label class="text-sm">Width:</label>
+              <input
+                id="calmiqs-width-input"
+                type="text"
+                class="w-20 px-2 py-1 border rounded text-sm"
+              />
+            </div>
+          </div>
+          <!-- END: Calmiqs Image Manager -->
+
           <button
             id="insertInlineBtn"
             class="bg-accent text-gray-800 px-3 py-1 rounded hover:bg-yellow-400 transition mb-3"
@@ -229,5 +294,11 @@
 
     <!-- 3. Editor functionality -->
     <script src="editor.js?v=1"></script>
+    <script>
+      // This value must be provided only to authenticated admin pages.
+      // Replace 'REPLACE_WITH_ADMIN_TOKEN' with the real secret you will create in Cloudflare (ADMIN_SECRET).
+      window.CALMIQS_ADMIN_TOKEN = "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Hadia@2017_Ayesha@2007";
+    </script>
+    <script src="/assets/js/editor-images.js" defer></script>
   </body>
 </html>
