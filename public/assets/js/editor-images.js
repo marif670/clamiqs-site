@@ -83,11 +83,6 @@
 
   const IMG_DELIVERY = (id, size) => `/img/${id}/${size}`;
 
-  // Admin secret token header name
-  const ADMIN_TOKEN_HEADER = "X-Admin-Token";
-  // You must set window.CALMIQS_ADMIN_TOKEN in editor.html or inject via template
-  const ADMIN_TOKEN = window.CALMIQS_ADMIN_TOKEN || "";
-
   // Selectors (detected from editor.html)
   const editorEl = document.querySelector("#content"); // contentEditable area
   const inlineInput = document.querySelector("#inlineImageFile");
