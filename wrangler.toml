@@ -10,3 +10,7 @@ id = "7bceea0c0fe9419b81c41b54231acc11"
 binding = "CALMIQS_IMAGES"
 id = "cdab54f42fde47db8ea06123a7b686eb"
 
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "calmiqs-images"
+
