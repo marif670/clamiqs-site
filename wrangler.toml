@@ -14,5 +14,3 @@ id = "cdab54f42fde47db8ea06123a7b686eb"
 binding = "R2_BUCKET"
 bucket_name = "calmiqs-images"
 
-# wrangler.toml
-name = 'calmiqs-images-worker'
