@@ -12,9 +12,37 @@
   const WORKER_BASE = "https://calmiqs-images-worker.techaipet.workers.dev";
 
   // API endpoints
-  const LIST_URL = `${WORKER_BASE}/list`;
   const UPLOAD_URL = `${WORKER_BASE}/upload`;
+  const LIST_URL = `${WORKER_BASE}/list`;
   const UPDATE_URL = `${WORKER_BASE}/update`;
+  // Inline image upload
+  document.getElementById("insertInlineBtn").addEventListener("click", async () => {
+    const fileInput = document.getElementById("inlineImageFile");
+    if (!fileInput.files.length) return alert("Please select a file.");
+
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch(UPLOAD_URL, {
+        method: "POST",
+        headers: { "X-Admin-Token": window.CALMIQS_ADMIN_TOKEN },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+
+      // Insert the uploaded image into the editor
+      const imgHTML = `<img src="${data.url || "#"}" alt="${
+        file.name
+      }" class="inline-img mx-auto my-4 rounded-lg shadow-md" style="max-width:100%;height:auto;" />`;
+      insertAtCursor(document.getElementById("content"), imgHTML);
+    } catch (err) {
+      alert("Image upload failed: " + err.message);
+    }
+  });
 
   // Global admin token injected in editor.html
   const ADMIN_TOKEN = window.CALMIQS_ADMIN_TOKEN || "";
@@ -509,29 +537,6 @@
 
   init();
 })();
-// === Inline Image Upload ===
-document.getElementById("inlineImageFile").addEventListener("change", uploadInlineImage);
-
-async function uploadInlineImage(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    const res = await fetch(UPLOAD_URL, {
-      method: "POST",
-      headers: { "X-Admin-Token": window.CALMIQS_ADMIN_TOKEN },
-      body: formData,
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Upload failed");
-    insertInlineImage(data.url, file.name);
-  } catch (err) {
-    alert("Image upload failed: " + err.message);
-  }
-}
 
 function insertInlineImage(url, altText) {
   const imgHTML = `<img src="${url}" alt="${altText}" class="inline-img mx-auto my-4 rounded-lg shadow-md" style="max-width:100%;height:auto;" />`;
@@ -561,4 +566,23 @@ async function loadLibrary() {
     grid.appendChild(thumb);
   });
   document.getElementById("imageLibrary").classList.remove("hidden");
+}
+function insertAtCursor(element, html) {
+  element.focus();
+  if (document.getSelection) {
+    const sel = document.getSelection();
+    if (sel.getRangeAt && sel.rangeCount) {
+      const range = sel.getRangeAt(0);
+      range.deleteContents();
+      const el = document.createElement("div");
+      el.innerHTML = html;
+      const frag = document.createDocumentFragment();
+      let node;
+      while ((node = el.firstChild)) frag.appendChild(node);
+      range.insertNode(frag);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+  }
 }
