@@ -108,12 +108,20 @@
   let postId = document.querySelector("#post-id")?.value || "unsaved";
   const AUTOSAVE_KEY = `calmiqs:editor:draft:${postId}`;
 
-  // helper: fetch wrapper with admin token
+  // === Helper: authenticated fetch with admin token ===
   async function authFetch(url, opts = {}) {
     opts.headers = opts.headers || {};
-    if (ADMIN_TOKEN) opts.headers[ADMIN_TOKEN_HEADER] = ADMIN_TOKEN;
+
+    // Use global admin token variable
+    if (window.CALMIQS_ADMIN_TOKEN) {
+      opts.headers["X-Admin-Token"] = window.CALMIQS_ADMIN_TOKEN;
+    }
+
+    // Include credentials if needed (optional)
     opts.credentials = "include";
-    return fetch(url, opts);
+
+    const res = await fetch(url, opts);
+    return res;
   }
 
   // ========== Gallery: open / load ==========
