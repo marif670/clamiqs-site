@@ -8,14 +8,13 @@
 
   // 🔗 Worker endpoint base — replace <your-worker-subdomain> with your actual subdomain
   // Example: https://calmiqs-images-worker.ai-pet-tech.workers.dev
-  const CALMIQS_WORKER_BASE = "https://calmiqs-images-worker.techaipet.workers.dev/api/images";
+  // Worker endpoint base
+  const WORKER_BASE = "https://calmiqs-images-worker.techaipet.workers.dev";
 
-  // Consolidated API endpoints
-  const API_ENDPOINTS = {
-    upload: `${CALMIQS_WORKER_BASE}/upload`,
-    list: `${CALMIQS_WORKER_BASE}/list`,
-    update: `${CALMIQS_WORKER_BASE}/update`,
-  };
+  // API endpoints
+  const LIST_URL = `${WORKER_BASE}/list`;
+  const UPLOAD_URL = `${WORKER_BASE}/upload`;
+  const UPDATE_URL = `${WORKER_BASE}/update`;
 
   // Global admin token injected in editor.html
   const ADMIN_TOKEN = window.CALMIQS_ADMIN_TOKEN || "";
@@ -502,3 +501,56 @@
 
   init();
 })();
+// === Inline Image Upload ===
+document.getElementById("inlineImageFile").addEventListener("change", uploadInlineImage);
+
+async function uploadInlineImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const res = await fetch(UPLOAD_URL, {
+      method: "POST",
+      headers: { "X-Admin-Token": window.CALMIQS_ADMIN_TOKEN },
+      body: formData,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Upload failed");
+    insertInlineImage(data.url, file.name);
+  } catch (err) {
+    alert("Image upload failed: " + err.message);
+  }
+}
+
+function insertInlineImage(url, altText) {
+  const imgHTML = `<img src="${url}" alt="${altText}" class="inline-img mx-auto my-4 rounded-lg shadow-md" style="max-width:100%;height:auto;" />`;
+  insertAtCursor(document.getElementById("blogContent"), imgHTML);
+}
+// === Image Library ===
+document.getElementById("selectImageBtn").addEventListener("click", loadLibrary);
+document.getElementById("closeLibraryBtn").addEventListener("click", () => {
+  document.getElementById("imageLibrary").classList.add("hidden");
+});
+
+async function loadLibrary() {
+  const res = await fetch(LIST_URL, {
+    headers: { "X-Admin-Token": window.CALMIQS_ADMIN_TOKEN },
+  });
+  const data = await res.json();
+  const grid = document.getElementById("libraryGrid");
+  grid.innerHTML = "";
+  data.images.forEach((img) => {
+    const thumb = document.createElement("img");
+    thumb.src = `${WORKER_BASE}/files/${img.name}`; // adjust once upload logic added
+    thumb.className = "w-full rounded-lg cursor-pointer hover:ring-2 hover:ring-blue-400";
+    thumb.addEventListener("click", () => {
+      insertInlineImage(thumb.src, img.name);
+      document.getElementById("imageLibrary").classList.add("hidden");
+    });
+    grid.appendChild(thumb);
+  });
+  document.getElementById("imageLibrary").classList.remove("hidden");
+}

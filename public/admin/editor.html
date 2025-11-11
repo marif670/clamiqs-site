@@ -185,6 +185,27 @@
                   <button id="calmiqs-gallery-close" class="btn">Close</button>
                 </div>
               </div>
+              <!-- Select from Library Button -->
+              <button id="selectImageBtn" class="px-3 py-2 bg-gray-200 rounded ml-2">
+                Select from Library
+              </button>
+
+              <!-- Image Library Modal -->
+              <div
+                id="imageLibrary"
+                class="hidden fixed inset-0 bg-black/50 flex justify-center items-center z-50"
+              >
+                <div class="bg-white p-4 rounded-lg max-h-[80vh] overflow-y-auto w-3/4">
+                  <h2 class="text-xl font-bold mb-2">Image Library</h2>
+                  <div id="libraryGrid" class="grid grid-cols-4 gap-4"></div>
+                  <button
+                    id="closeLibraryBtn"
+                    class="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
 
               <!-- Filter / Search -->
               <div class="p-3 border-b">
