@@ -196,6 +196,7 @@
       <div class="toolbar" style="margin-left: auto">
         <button id="newPostBtn" class="btn">New</button>
         <button id="loadPostBtn" class="btn">Load</button>
+        <button id="openPostsBtn" class="btn">Posts Library</button>
         <button id="savePostBtn" class="btn primary">Save</button>
         <button id="deletePostBtn" class="btn danger">Delete</button>
       </div>
@@ -481,8 +482,9 @@
         }
 
         function ensureParagraphAfter(node) {
+          // ensure node is valid and inside editor
           const el = node.nodeType === 1 ? node : node.parentNode;
-          if (!el) return;
+          if (!el || !el.parentNode || !editor.contains(el)) return;
           const next = el.nextSibling;
           if (
             !next ||
