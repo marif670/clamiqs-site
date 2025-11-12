@@ -3,15 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Calmiqs Editor — Final</title>
+    <title>Calmiqs — Editor (Final)</title>
     <style>
-      /* Colored theme, compact UI */
       :root {
-        --bg: #0f1724;
-        --card: #ffffff;
-        --muted: #64748b;
         --accent: #2563eb;
-        --accent-2: #06b6d4;
+        --muted: #64748b;
         --border: #e6eef8;
         --danger: #dc2626;
       }
@@ -45,11 +41,13 @@
       }
       .btn.primary {
         background: var(--accent);
-        color: white;
+        color: #fff;
         border-color: var(--accent);
       }
-      .btn.ghost {
+      .btn.danger {
         background: transparent;
+        color: var(--danger);
+        border-color: #ffcccc;
       }
       .input {
         padding: 8px;
@@ -62,7 +60,7 @@
         gap: 12px;
       }
       .col {
-        background: var(--card);
+        background: #fff;
         border: 1px solid var(--border);
         border-radius: 8px;
         padding: 12px;
@@ -79,14 +77,10 @@
         padding: 10px;
         border-radius: 6px;
         overflow: auto;
+        background: #ffffff;
       }
       .editor:focus {
         outline: 2px solid rgba(37, 99, 235, 0.12);
-      }
-      .meta-row {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 8px;
       }
       .small {
         font-size: 13px;
@@ -126,7 +120,7 @@
         padding: 12px;
         border-radius: 8px;
         min-height: 220px;
-        margin-top: 12px;
+        margin-top: 16px;
       }
       .modal {
         position: fixed;
@@ -176,13 +170,6 @@
         border-radius: 6px;
         border: 1px solid var(--border);
       }
-      .muted {
-        color: var(--muted);
-        font-size: 13px;
-      }
-      .danger {
-        color: var(--danger);
-      }
       footer {
         margin-top: 12px;
         font-size: 13px;
@@ -195,14 +182,14 @@
       <h1>Calmiqs Editor</h1>
       <div class="toolbar" style="margin-left: auto">
         <button id="newPostBtn" class="btn">New</button>
-        <button id="loadPostBtn" class="btn">Load</button>
         <button id="openPostsBtn" class="btn">Posts Library</button>
+        <button id="loadPostBtn" class="btn">Load</button>
         <button id="savePostBtn" class="btn primary">Save</button>
         <button id="deletePostBtn" class="btn danger">Delete</button>
       </div>
     </header>
 
-    <!-- IMPORTANT: Set your ADMIN SECRET here (must match Worker ADMIN_SECRET) -->
+    <!-- IMPORTANT: put your admin token here (exact match with Worker ADMIN_SECRET) -->
     <script>
       window.CALMIQS_ADMIN_TOKEN = "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Hadia@2017_Ayesha@2007";
       const WORKER_BASE = "https://calmiqs-images-worker.techaipet.workers.dev";
@@ -213,16 +200,13 @@
       const FILES_BASE = WORKER_BASE + "/files/";
     </script>
 
-    <!-- top metadata + layout -->
     <div class="layout" style="align-items: flex-start">
-      <!-- left column: inputs -->
       <div class="col left">
         <div style="margin-bottom: 10px">
           <input id="postTitle" class="input" placeholder="Post title" />
           <div class="small" style="margin-top: 6px">Slug auto-generated from title on save</div>
         </div>
 
-        <!-- formatting toolbar -->
         <div class="toolbar-2">
           <button class="btn" data-cmd="bold"><b>B</b></button>
           <button class="btn" data-cmd="italic"><i>I</i></button>
@@ -236,26 +220,22 @@
           <button id="toggleHtmlBtn" class="btn">Show HTML</button>
         </div>
 
-        <!-- editable area -->
         <div id="editor" class="editor" contenteditable="true" aria-label="Article editor">
           <p>Start writing the post here...</p>
         </div>
 
-        <!-- inline image controls -->
         <div style="display: flex; gap: 8px; align-items: center; margin-top: 10px">
           <input id="inlineImageFile" type="file" accept="image/*" />
           <button id="uploadInsertBtn" class="btn">Upload & Insert</button>
           <button id="openLibraryBtn" class="btn">Select from Library</button>
         </div>
 
-        <!-- HTML raw view -->
         <div id="htmlViewWrap" style="display: none; margin-top: 10px">
           <label class="small">Raw HTML</label>
           <textarea id="htmlView" class="html-view"></textarea>
         </div>
       </div>
 
-      <!-- right column: hero + image options, meta -->
       <aside class="col right">
         <div style="margin-bottom: 10px">
           <label class="small">Hero Image</label>
@@ -267,8 +247,9 @@
             style="margin-top: 8px"
           />
           <button id="uploadHeroBtn" class="btn" style="margin-top: 8px">Upload Hero Image</button>
+          <div id="heroPreview" style="margin-top: 8px"></div>
         </div>
-        <div id="heroPreview" style="margin-top: 8px"></div>
+
         <div style="margin-top: 12px">
           <label class="small">Excerpt</label>
           <textarea
@@ -294,7 +275,7 @@
       </aside>
     </div>
 
-    <!-- library modal -->
+    <!-- Image Library modal -->
     <div id="libraryModal" class="modal" style="display: none">
       <div class="modal-card">
         <div
@@ -312,7 +293,25 @@
       </div>
     </div>
 
-    <!-- inline floating toolbar for image edits -->
+    <!-- Posts modal -->
+    <div id="postsModal" class="modal" style="display: none">
+      <div class="modal-card">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+          "
+        >
+          <strong>Posts</strong>
+          <div><button id="closePostsBtn" class="btn">Close</button></div>
+        </div>
+        <div id="postsGrid"></div>
+      </div>
+    </div>
+
+    <!-- Inline image toolbar (floating) -->
     <div id="imgToolbar" class="inline-toolbar" style="display: none">
       <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center">
         <input id="imgUrlField" class="input" placeholder="Image URL" style="width: 260px" />
@@ -327,41 +326,43 @@
           <button id="wrapLeftBtn" class="btn">Wrap Left</button>
           <button id="wrapRightBtn" class="btn">Wrap Right</button>
           <button id="wrapCenterBtn" class="btn">Center</button>
+          <button id="alignPageLeft" class="btn">Align Page Left</button>
+          <button id="alignPageCenter" class="btn">Align Page Center</button>
+          <button id="alignPageRight" class="btn">Align Page Right</button>
         </div>
         <button id="saveImgMetaBtn" class="btn primary">Save</button>
       </div>
     </div>
 
-    <!-- preview below (stacked) -->
-    <div id="preview" aria-live="polite" style="margin-top: 16px"></div>
+    <!-- Live preview stacked -->
+    <div id="preview" aria-live="polite"></div>
 
     <footer>
-      <div class="muted">
-        Tip: Use Show HTML to view/edit raw tags. Save to persist drafts to Cloudflare KV.
+      <div class="small">
+        Tip: Use Show HTML to view raw tags. Save to persist drafts to Cloudflare KV.
       </div>
     </footer>
 
     <script>
-      /* =========================
-     Calmiqs Final Editor JS
-     - Uses Worker endpoints set above
-     - Replace ADMIN token string above before using
-     ========================= */
-
       (function () {
-        // Basic elements
+        // DOM references
         const editor = document.getElementById("editor");
         const preview = document.getElementById("preview");
         const htmlViewWrap = document.getElementById("htmlViewWrap");
         const htmlView = document.getElementById("htmlView");
         const toggleHtmlBtn = document.getElementById("toggleHtmlBtn");
 
-        const uploadInsertBtn = document.getElementById("uploadInsertBtn");
         const inlineFile = document.getElementById("inlineImageFile");
+        const uploadInsertBtn = document.getElementById("uploadInsertBtn");
         const openLibraryBtn = document.getElementById("openLibraryBtn");
         const libraryModal = document.getElementById("libraryModal");
         const libraryGrid = document.getElementById("libraryGrid");
         const closeLibraryBtn = document.getElementById("closeLibraryBtn");
+
+        const heroFile = document.getElementById("heroFile");
+        const heroAlt = document.getElementById("heroAlt");
+        const uploadHeroBtn = document.getElementById("uploadHeroBtn");
+        const heroPreview = document.getElementById("heroPreview");
 
         const imgToolbar = document.getElementById("imgToolbar");
         const imgUrlField = document.getElementById("imgUrlField");
@@ -370,10 +371,14 @@
         const wrapLeftBtn = document.getElementById("wrapLeftBtn");
         const wrapRightBtn = document.getElementById("wrapRightBtn");
         const wrapCenterBtn = document.getElementById("wrapCenterBtn");
+        const alignPageLeft = document.getElementById("alignPageLeft");
+        const alignPageCenter = document.getElementById("alignPageCenter");
+        const alignPageRight = document.getElementById("alignPageRight");
         const saveImgMetaBtn = document.getElementById("saveImgMetaBtn");
 
         const postTitle = document.getElementById("postTitle");
         const newPostBtn = document.getElementById("newPostBtn");
+        const openPostsBtn = document.getElementById("openPostsBtn");
         const loadPostBtn = document.getElementById("loadPostBtn");
         const savePostBtn = document.getElementById("savePostBtn");
         const deletePostBtn = document.getElementById("deletePostBtn");
@@ -381,17 +386,15 @@
         const defaultImageWidth = document.getElementById("defaultImageWidth");
         const autosaveToggle = document.getElementById("autosaveToggle");
 
-        const heroFile = document.getElementById("heroFile");
-        const heroAlt = document.getElementById("heroAlt");
-        const uploadHeroBtn = document.getElementById("uploadHeroBtn");
+        const postsModal = document.getElementById("postsModal");
+        const postsGrid = document.getElementById("postsGrid");
+        const closePostsBtn = document.getElementById("closePostsBtn");
 
-        // state
         let selectedImageEl = null;
-        let editingImageId = null; // if image metadata stored with id/r2Key
         let autosaveTimer = null;
-        const AUTOSAVE_INTERVAL_MS = 60000; // 60s
+        const AUTOSAVE_INTERVAL_MS = 60000;
 
-        // helper: auth fetch
+        // authFetch
         async function authFetch(url, opts = {}) {
           opts.headers = opts.headers || {};
           if (window.CALMIQS_ADMIN_TOKEN)
@@ -399,7 +402,7 @@
           return fetch(url, opts);
         }
 
-        // formatting toolbar (execCommand)
+        // formatting toolbar
         document.querySelectorAll("[data-cmd]").forEach((btn) => {
           btn.addEventListener("click", () => {
             const cmd = btn.dataset.cmd;
@@ -415,7 +418,7 @@
           });
         });
 
-        // insert table
+        // table insertion
         document.getElementById("insertTableBtn").addEventListener("click", () => {
           const rows = parseInt(prompt("Rows", "2"), 10) || 2;
           const cols = parseInt(prompt("Columns", "3"), 10) || 3;
@@ -435,7 +438,7 @@
           updatePreview();
         });
 
-        // toggle html raw view
+        // toggle HTML
         toggleHtmlBtn.addEventListener("click", () => {
           if (htmlViewWrap.style.display === "none" || htmlViewWrap.style.display === "") {
             htmlView.value = editor.innerHTML;
@@ -446,44 +449,24 @@
             htmlViewWrap.style.display = "none";
             toggleHtmlBtn.textContent = "Show HTML";
             updatePreview();
+            attachExistingImages();
           }
         });
 
-        // editor change -> preview
+        // preview updates
         const debouncedPreview = debounce(updatePreview, 200);
-        editor.addEventListener("input", () => {
-          debouncedPreview();
-        });
-        editor.addEventListener("keyup", () => {
-          debouncedPreview();
-        });
+        editor.addEventListener("input", () => debouncedPreview());
+        editor.addEventListener("keyup", () => debouncedPreview());
 
         function updatePreview() {
           preview.innerHTML = editor.innerHTML;
+          attachExistingImages();
         }
 
-        // insertAtCursor — accepts Element or Node
-        function insertAtCursor(node) {
-          const sel = window.getSelection();
-          if (!sel || !sel.rangeCount) {
-            editor.appendChild(node);
-            return;
-          }
-          const range = sel.getRangeAt(0);
-          range.deleteContents();
-          range.insertNode(node);
-          range.setStartAfter(node);
-          range.collapse(true);
-          sel.removeAllRanges();
-          sel.addRange(range);
-          editor.focus();
-          ensureParagraphAfter(node);
-          updatePreview();
-        }
-
+        // safe ensureParagraphAfter
         function ensureParagraphAfter(node) {
-          // ensure node is valid and inside editor
-          const el = node.nodeType === 1 ? node : node.parentNode;
+          const el =
+            node && node.nodeType === 1 ? node : node && node.parentNode ? node.parentNode : null;
           if (!el || !el.parentNode || !editor.contains(el)) return;
           const next = el.nextSibling;
           if (
@@ -497,19 +480,66 @@
           }
         }
 
-        // ---------- IMAGE UPLOAD & LIBRARY ----------
-        // Upload & insert inline
+        // insertAtCursor (element)
+        function insertAtCursor(el) {
+          const sel = window.getSelection();
+          if (!sel || !sel.rangeCount) {
+            editor.appendChild(el);
+            ensureParagraphAfter(el);
+            updatePreview();
+            return;
+          }
+          const range = sel.getRangeAt(0);
+          range.deleteContents();
+          range.insertNode(el);
+          range.setStartAfter(el);
+          range.collapse(true);
+          sel.removeAllRanges();
+          sel.addRange(range);
+          editor.focus();
+          ensureParagraphAfter(el);
+          updatePreview();
+        }
+
+        // attach handlers to images already in editor
+        function attachExistingImages() {
+          editor.querySelectorAll("img").forEach((img) => {
+            if (img.dataset._handled) return;
+            img.dataset._handled = "1";
+            attachImageHandlers(img);
+          });
+        }
+
+        // attachImageHandlers - click opens toolbar
+        function attachImageHandlers(img) {
+          img.style.maxWidth = img.style.maxWidth || "100%";
+          img.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            document
+              .querySelectorAll(".inline-img")
+              .forEach((i) => i.classList.remove("img-selected"));
+            img.classList.add("img-selected");
+            selectedImageEl = img;
+            const rect = img.getBoundingClientRect();
+            imgToolbar.style.left = rect.left + window.scrollX + "px";
+            imgToolbar.style.top = rect.bottom + window.scrollY + 8 + "px";
+            imgToolbar.style.display = "block";
+            imgUrlField.value = img.src;
+            imgAltField.value = img.alt || "";
+            imgWidthField.value = img.style.width || "";
+          });
+          ensureParagraphAfter(img);
+        }
+
+        // image upload & insert
         uploadInsertBtn.addEventListener("click", async () => {
-          if (!inlineFile.files || inlineFile.files.length === 0)
-            return alert("Choose a file first");
+          if (!inlineFile.files || !inlineFile.files[0]) return alert("Choose a file first");
           await uploadFileAndInsert(inlineFile.files[0]);
         });
 
         inlineFile.addEventListener("change", async () => {
-          if (inlineFile.files && inlineFile.files[0]) {
-            // auto-upload on choose
+          if (inlineFile.files && inlineFile.files[0])
             await uploadFileAndInsert(inlineFile.files[0]);
-          }
         });
 
         async function uploadFileAndInsert(file) {
@@ -519,30 +549,33 @@
             const res = await authFetch(UPLOAD_URL, { method: "POST", body: fd });
             const json = await res.json();
             if (!res.ok) throw new Error(json.error || JSON.stringify(json));
-            // expect json.metadata.r2Key and json.url (or construct)
-            const url = json.url || FILES_BASE + encodeURIComponent(json.metadata.r2Key);
+            // url fallback
+            const url =
+              json.url ||
+              FILES_BASE +
+                encodeURIComponent(
+                  json.metadata && json.metadata.r2Key
+                    ? json.metadata.r2Key.replace(/^uploads\//, "")
+                    : json.metadata.r2Key
+                );
             const img = document.createElement("img");
             img.src = url;
-            img.alt = json.metadata.alt || file.name;
+            img.alt = json.metadata && json.metadata.alt ? json.metadata.alt : file.name;
             img.className = "inline-img";
-            img.dataset.r2key = json.metadata.r2Key || json.metadata.r2Key;
-            img.dataset.id = json.metadata.r2Key || "";
-            // default width
+            if (json.metadata && json.metadata.r2Key) img.dataset.r2key = json.metadata.r2Key;
             const defW = defaultImageWidth.value || "80%";
             img.style.width = defW;
             attachImageHandlers(img);
             insertAtCursor(img);
           } catch (err) {
-            console.error(err);
+            console.error("Upload failed", err);
             alert("Image upload failed: " + (err.message || err));
           }
         }
 
-        // Library modal handlers
+        // library modal
         openLibraryBtn.addEventListener("click", openLibrary);
-        closeLibraryBtn.addEventListener("click", () => {
-          libraryModal.style.display = "none";
-        });
+        closeLibraryBtn.addEventListener("click", () => (libraryModal.style.display = "none"));
 
         async function openLibrary() {
           libraryGrid.innerHTML =
@@ -551,7 +584,7 @@
           try {
             const res = await authFetch(LIST_URL);
             const json = await res.json();
-            if (!res.ok) throw new Error(json.error || "Failed to load");
+            if (!res.ok) throw new Error(json.error || "Failed");
             libraryGrid.innerHTML = "";
             const arr = json.images || [];
             if (arr.length === 0) {
@@ -560,10 +593,9 @@
               return;
             }
             arr.forEach((item) => {
-              const thumb = document.createElement("img");
-              // item.r2Key expected in metadata
               const key = item.r2Key || item.r2Key || item.key || item.filename;
-              thumb.src = FILES_BASE + encodeURIComponent(key);
+              const thumb = document.createElement("img");
+              thumb.src = FILES_BASE + encodeURIComponent(key.replace(/^uploads\//, "")); // normalize
               thumb.className = "thumb";
               thumb.alt = item.alt || item.title || item.filename || "";
               thumb.title = item.title || item.filename || "";
@@ -580,49 +612,24 @@
               libraryGrid.appendChild(thumb);
             });
           } catch (err) {
-            console.error(err);
+            console.error("Library load failed", err);
             libraryGrid.innerHTML =
               '<div style="grid-column:1/-1;padding:12px;color:#d04437">Failed to load library</div>';
           }
         }
 
-        // image handlers: click to show toolbar, attach resize handle if wanted
-        function attachImageHandlers(img) {
-          img.addEventListener("click", (ev) => {
-            ev.stopPropagation();
-            // select image visually
-            document
-              .querySelectorAll(".inline-img")
-              .forEach((i) => i.classList.remove("img-selected"));
-            img.classList.add("img-selected");
-            selectedImageEl = img;
-            // show toolbar near image
-            const rect = img.getBoundingClientRect();
-            imgToolbar.style.left = rect.left + window.scrollX + "px";
-            imgToolbar.style.top = rect.bottom + window.scrollY + 8 + "px";
-            imgToolbar.style.display = "block";
-            imgUrlField.value = img.src;
-            imgAltField.value = img.alt || "";
-            imgWidthField.value = img.style.width || "";
-          });
-          // ensure paragraph after to allow typing
-          ensureParagraphAfter(img);
-        }
-
-        // save image meta (do not require id; if r2Key present update KV)
+        // inline toolbar actions
         saveImgMetaBtn.addEventListener("click", async () => {
           if (!selectedImageEl) return;
           selectedImageEl.src = imgUrlField.value.trim() || selectedImageEl.src;
           selectedImageEl.alt = imgAltField.value.trim();
           const w = imgWidthField.value.trim();
-          if (w) {
+          if (w)
             selectedImageEl.style.width =
               w.endsWith("%") || w.endsWith("px") ? w : isNaN(Number(w)) ? w : w + "px";
-          } else {
-            selectedImageEl.style.removeProperty("width");
-          }
+          else selectedImageEl.style.removeProperty("width");
           imgToolbar.style.display = "none";
-          // if r2Key exists, update KV via worker /update
+          // update KV if r2key present
           const r2key = selectedImageEl.dataset.r2key;
           if (r2key) {
             try {
@@ -661,7 +668,29 @@
           updatePreview();
         });
 
-        // hide toolbar when clicking outside
+        alignPageLeft.addEventListener("click", () => {
+          if (!selectedImageEl) return;
+          selectedImageEl.style.display = "block";
+          selectedImageEl.style.margin = "0";
+          imgToolbar.style.display = "none";
+          updatePreview();
+        });
+        alignPageCenter.addEventListener("click", () => {
+          if (!selectedImageEl) return;
+          selectedImageEl.style.display = "block";
+          selectedImageEl.style.margin = "12px auto";
+          imgToolbar.style.display = "none";
+          updatePreview();
+        });
+        alignPageRight.addEventListener("click", () => {
+          if (!selectedImageEl) return;
+          selectedImageEl.style.display = "block";
+          selectedImageEl.style.margin = "0 0 0 auto";
+          imgToolbar.style.display = "none";
+          updatePreview();
+        });
+
+        // hide toolbar on outside click
         document.addEventListener("click", (e) => {
           if (!imgToolbar.contains(e.target)) {
             imgToolbar.style.display = "none";
@@ -672,33 +701,39 @@
           }
         });
 
-        // ---------- HERO IMAGE UPLOAD ----------
+        // HERO IMAGE upload
         uploadHeroBtn.addEventListener("click", async () => {
           if (!heroFile.files || !heroFile.files[0]) return alert("Choose hero image first");
           const f = heroFile.files[0];
           try {
             const fd = new FormData();
             fd.append("file", f);
-            fd.append("title", "hero");
             fd.append("alt", heroAlt.value || "");
             const res = await authFetch(UPLOAD_URL, { method: "POST", body: fd });
-            const j = await res.json();
-            if (!res.ok) throw new Error(j.error || "Upload failed");
+            const json = await res.json();
+            if (!res.ok) throw new Error(json.error || "Upload failed");
+            // set hero preview using json.url or files route
+            const url =
+              json.url ||
+              FILES_BASE +
+                encodeURIComponent(
+                  json.metadata && json.metadata.r2Key
+                    ? json.metadata.r2Key.replace(/^uploads\//, "")
+                    : json.metadata.r2Key
+                );
+            heroPreview.innerHTML = `<img src="${url}" alt="${
+              json.metadata && json.metadata.alt ? json.metadata.alt : ""
+            }" style="width:100%;border-radius:6px;margin-top:8px" />`;
             alert(
-              "Hero uploaded — you can insert via library or use the URL: " +
-                (j.url || ".../files/" + encodeURIComponent(j.metadata.r2Key))
+              "Hero uploaded — preview updated. You can also insert it into the body via Image Library."
             );
-            // after successful upload and json.url available
-            document.getElementById("heroPreview").innerHTML = `<img src="${
-              json.url || FILES_BASE + encodeURIComponent(json.metadata.r2Key)
-            }" alt="${json.metadata.alt || ""}" style="width:100%;border-radius:6px" />`;
           } catch (err) {
             console.error(err);
             alert("Hero upload failed: " + (err.message || err));
           }
         });
 
-        // ---------- POSTS (CRUD) ----------
+        // ---------- POSTS CRUD & Posts Library ----------
         newPostBtn.addEventListener("click", () => {
           postTitle.value = "";
           editor.innerHTML = "<p></p>";
@@ -706,7 +741,7 @@
           updatePreview();
         });
         loadPostBtn.addEventListener("click", async () => {
-          const slug = prompt("Enter slug to load");
+          const slug = prompt("Enter post slug to load");
           if (!slug) return;
           try {
             const res = await authFetch(POSTS_URL + "/" + encodeURIComponent(slug));
@@ -716,6 +751,7 @@
             editor.innerHTML = j.content || "";
             postExcerpt.value = j.excerpt || "";
             updatePreview();
+            attachExistingImages();
           } catch (e) {
             console.error(e);
             alert("Load failed");
@@ -770,7 +806,67 @@
           }
         }
 
-        // autosave
+        // Posts library UI
+        openPostsBtn.addEventListener("click", async () => {
+          postsGrid.innerHTML = '<div style="padding:18px;text-align:center">Loading…</div>';
+          postsModal.style.display = "flex";
+          try {
+            const res = await authFetch(POSTS_URL);
+            const j = await res.json();
+            if (!res.ok) throw new Error(j.error || "Failed");
+            postsGrid.innerHTML = "";
+            (j.posts || []).forEach((p) => {
+              const row = document.createElement("div");
+              row.style.padding = "8px";
+              row.style.borderBottom = "1px solid #eef";
+              row.innerHTML = `<strong>${p.title}</strong><div class="small">${p.slug} · ${
+                p.updatedAt || p.createdAt || ""
+              }</div>
+            <div style="margin-top:8px">
+              <button class="btn" data-action="edit" data-slug="${p.slug}">Edit</button>
+              <button class="btn danger" data-action="delete" data-slug="${p.slug}">Delete</button>
+            </div>`;
+              postsGrid.appendChild(row);
+            });
+            postsGrid.addEventListener("click", async (e) => {
+              const btn = e.target.closest("button");
+              if (!btn) return;
+              const action = btn.getAttribute("data-action");
+              const slug = btn.getAttribute("data-slug");
+              if (action === "edit") {
+                const res2 = await authFetch(POSTS_URL + "/" + encodeURIComponent(slug));
+                if (!res2.ok) {
+                  alert("Load failed");
+                  return;
+                }
+                const post = await res2.json();
+                postTitle.value = post.title;
+                editor.innerHTML = post.content || "";
+                postExcerpt.value = post.excerpt || "";
+                attachExistingImages();
+                updatePreview();
+                postsModal.style.display = "none";
+              } else if (action === "delete") {
+                if (!confirm("Delete " + slug + "?")) return;
+                const res3 = await authFetch(POSTS_URL + "/" + encodeURIComponent(slug), {
+                  method: "DELETE",
+                });
+                if (res3.ok) {
+                  alert("Deleted");
+                  btn.closest("div").remove();
+                } else {
+                  alert("Delete failed");
+                }
+              }
+            });
+          } catch (err) {
+            console.error(err);
+            postsGrid.innerHTML = '<div class="small">Failed to load posts</div>';
+          }
+        });
+        closePostsBtn.addEventListener("click", () => (postsModal.style.display = "none"));
+
+        // ---------- Autosave ----------
         function startAutosave() {
           if (autosaveTimer) clearInterval(autosaveTimer);
           if (!autosaveToggle.checked) return;
@@ -785,7 +881,11 @@
         autosaveToggle.addEventListener("change", startAutosave);
         startAutosave();
 
-        // ---------- helper utilities ----------
+        // initial attachments
+        attachExistingImages();
+        updatePreview();
+
+        // small utilities
         function debounce(fn, t) {
           let timer;
           return (...a) => {
@@ -793,119 +893,10 @@
             timer = setTimeout(() => fn.apply(this, a), t);
           };
         }
-        function insertAtCursor(el) {
-          const sel = window.getSelection();
-          if (!sel || !sel.rangeCount) {
-            editor.appendChild(el);
-            return;
-          }
-          const range = sel.getRangeAt(0);
-          range.deleteContents();
-          range.insertNode(el);
-          range.setStartAfter(el);
-          range.collapse(true);
-          sel.removeAllRanges();
-          sel.addRange(range);
-          editor.focus();
-          ensureParagraphAfter(el);
-          updatePreview();
-        }
 
-        // attach click handler for images that may already be in the editor on load
-        function attachExistingImages() {
-          editor.querySelectorAll("img").forEach((img) => {
-            if (img.dataset._handled) return;
-            img.dataset._handled = "1";
-            attachImageHandlers(img);
-          });
-        }
-        attachExistingImages();
-        updatePreview();
-
-        // ensure preview updates when window gets focus (helpful after external changes)
-        window.addEventListener("focus", () => {
-          updatePreview();
-        });
+        // Expose debug helpers
+        window.calmiqsEditor = { editor, preview, savePostNow };
       })();
-      document.getElementById("openPostsBtn").addEventListener("click", async () => {
-        document.getElementById("postsModal").style.display = "flex";
-        const grid = document.getElementById("postsGrid");
-        grid.innerHTML = "Loading...";
-        try {
-          const res = await authFetch(POSTS_URL);
-          const j = await res.json();
-          if (!res.ok) throw new Error("Failed");
-          grid.innerHTML = "";
-          (j.posts || []).forEach((p) => {
-            const div = document.createElement("div");
-            div.style.padding = "8px";
-            div.style.borderBottom = "1px solid #eef";
-            div.innerHTML = `<strong>${p.title}</strong><div class="small">${p.slug} · updated ${
-              p.updatedAt || p.createdAt || ""
-            }</div>
-        <div style="margin-top:6px">
-          <button class="btn" data-slug="${p.slug}" data-action="edit">Edit</button>
-          <button class="btn danger" data-slug="${p.slug}" data-action="delete">Delete</button>
-        </div>`;
-            grid.appendChild(div);
-          });
-          grid.addEventListener("click", async (e) => {
-            const btn = e.target.closest("button");
-            if (!btn) return;
-            const action = btn.getAttribute("data-action");
-            const slug = btn.getAttribute("data-slug");
-            if (action === "edit") {
-              const res2 = await authFetch(POSTS_URL + "/" + encodeURIComponent(slug));
-              if (!res2.ok) {
-                alert("Load failed");
-                return;
-              }
-              const post = await res2.json();
-              postTitle.value = post.title;
-              editor.innerHTML = post.content || "";
-              postExcerpt.value = post.excerpt || "";
-              attachExistingImages();
-              updatePreview();
-              document.getElementById("postsModal").style.display = "none";
-            } else if (action === "delete") {
-              if (!confirm("Delete " + slug + "?")) return;
-              const res3 = await authFetch(POSTS_URL + "/" + encodeURIComponent(slug), {
-                method: "DELETE",
-              });
-              if (res3.ok) {
-                alert("Deleted");
-                btn.closest("div").remove();
-              } else {
-                alert("Delete failed");
-              }
-            }
-          });
-        } catch (err) {
-          grid.innerHTML = '<div class="small">Failed to load posts</div>';
-        }
-      });
-      document
-        .getElementById("closePostsBtn")
-        .addEventListener(
-          "click",
-          () => (document.getElementById("postsModal").style.display = "none")
-        );
     </script>
-    <div id="postsModal" class="modal" style="display: none">
-      <div class="modal-card">
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-          "
-        >
-          <strong>Posts</strong>
-          <button id="closePostsBtn" class="btn">Close</button>
-        </div>
-        <div id="postsGrid"></div>
-      </div>
-    </div>
   </body>
 </html>
